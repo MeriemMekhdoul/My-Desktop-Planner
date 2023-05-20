@@ -1,7 +1,5 @@
 package com.example.tp;
 
-import com.example.tp.utilities.Categorie;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -13,7 +11,9 @@ public class User {
    private String passward;
    private List<Categorie> categorie;
    private List<Taches> UnsheduledTahces = new ArrayList<>();
-  // private Calendar calendar;
+   private Calendrier calendar;
+   private List<Calendrier> calendriers;
+
  //  private Historique histo ;
    static private int minTaskDaily ;
    public int getMinTaskDaily(){
@@ -61,14 +61,25 @@ public class User {
       Pseudo = pseudo;
    }
 
-  //  public Calendar getCalendar() {
+    public Calendrier getCalendar(int annee) {
+        Calendrier calendrier = null;
+        for (Calendrier c : this.calendriers) {
+            if (c.getAnnee() == annee) {
+                calendrier = c;
+                break;
+            }
+        }
+        return calendrier;
+    }
+    public Calendrier newCalender(){
+       Calendrier calendrier = newCalender();
+       this.calendriers.add(calendrier);
+       return calendrier;
+    }
 
-    //    return calendar;
-    //}
-
-   // public void setCalendar(Calendar calendar) {
-    //    this.calendar = calendar;
-    //}
+    public void setCalendar(Calendrier calendar) {
+        this.calendar = calendar;
+    }
     public  void addTache(Taches newTache){
        tacheList.add(newTache);
     }

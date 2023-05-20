@@ -8,4 +8,15 @@ public class Calendrier {
     private List<Mois> mois;
 
     // Constructeur, getters, setters, etc.
+    public int getAnnee() {
+        return annee;
+    }
+    public void setAnnee(int annee) {
+        this.annee = annee;
+    }
+    public Mois getMonth(int mois){
+        return this.mois.get(mois);
+    }
+
+
 }
