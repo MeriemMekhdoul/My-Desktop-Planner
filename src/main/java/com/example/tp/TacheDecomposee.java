@@ -8,8 +8,18 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class TacheDecomposee extends Taches {
-    private List<TacheSimple> Simple= new List<TacheSimple>() {
-        @Override
+    private List<TacheSimple> Simple;
+
+    public List<TacheSimple> getSimple() {
+        return Simple;
+    }
+
+    public void setSimple(List<TacheSimple> simple) {
+        Simple = simple;
+    }
+
+}
+       /* @Override
         public int size() {
             return 0;
         }
@@ -129,6 +139,4 @@ public class TacheDecomposee extends Taches {
         public List<TacheSimple> subList(int fromIndex, int toIndex) {
             return null;
         }
-    };
-
-}
+    };*/

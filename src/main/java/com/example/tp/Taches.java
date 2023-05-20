@@ -1,11 +1,18 @@
 package com.example.tp;
 
+import com.example.tp.utilities.Categorie;
+import com.example.tp.utilities.Creneau;
+
+import java.util.Date;
+
 abstract class Taches {
+    protected Date deadline;
     protected String name;
-    protected int priorite ;
-    //protected Categorie categorie ;
+    protected Priorite priorite ;
+    protected Categorie categorie ;
     protected Etat etat;
     protected String duree ;
+    protected Creneau creneau;
 
     public void setName(String Name){
         this.name=Name ;
@@ -13,9 +20,9 @@ abstract class Taches {
     public String getName(){
         return  this.name;
     }
-    public void setPriorite(int prio){
+    public void setPriorite(Priorite prio){
         this.priorite=prio ;
-    }  public int getPriorite(){
+    }  public Priorite getPriorite(){
         return this.priorite;
 
     }  public Etat getEtat(){
@@ -30,7 +37,25 @@ abstract class Taches {
     public String getDuree(){
         return this.duree;
     }
+    public Creneau getCreneau(){
+        return  this.creneau;
+    }
 
+    public void setCreneau(Creneau c) {
+      this.creneau=c;
+    }
+    public void setCategorie(Categorie catg){
+        this.categorie=catg ;
+    }
+    public Categorie getCategorie(){
+        return this.categorie;
 
+    }
+    public Date getDeadline(){
+        return this.deadline;
+    }
 
+    public void setDeadline(Date deadline) {
+        this.deadline = deadline;
+    }
 }

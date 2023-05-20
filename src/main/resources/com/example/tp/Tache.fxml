@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.TacheController">
+   <children>
+      <VBox fx:id="Vbox" layoutX="14.0" layoutY="14.0" prefHeight="251.0" prefWidth="312.0">
+         <children>
+            <TextField fx:id="NomTache" text="Nom tache" />
+            <HBox prefHeight="29.0" prefWidth="100.0">
+               <children>
+                  <Label text="Durée" />
+                  <TextField fx:id="Duree" />
+               </children>
+            </HBox>
+            <HBox prefHeight="29.0" prefWidth="100.0">
+               <children>
+                  <Label text="Deadline:" />
+                  <DatePicker fx:id="deadline" prefHeight="25.0" prefWidth="128.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="29.0" prefWidth="100.0">
+               <children>
+                  <Label text="Priorité" />
+                  <ComboBox fx:id="priorite" prefWidth="150.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="29.0" prefWidth="100.0">
+               <children>
+                  <Label text="Categorie:" />
+                  <ComboBox fx:id="categorie" prefWidth="150.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="29.0" prefWidth="100.0">
+               <children>
+                  <Label text="Type de tache:" />
+                  <CheckBox fx:id="decomposable" mnemonicParsing="false" text="Decomposable" />
+                  <CheckBox fx:id="simple" mnemonicParsing="false" text="Simple" />
+               </children>
+            </HBox>
+            <HBox prefHeight="31.0" prefWidth="312.0">
+               <children>
+                  <Label text="Etat:" />
+                  <ComboBox fx:id="etat" prefWidth="150.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="29.0" prefWidth="100.0">
+               <children>
+                  <CheckBox fx:id="bloquee" mnemonicParsing="false" />
+                  <Label text="Bloquée le creneau pour cette tache" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <Button layoutX="514.0" layoutY="348.0" mnemonicParsing="false" onAction="#handleSaveButton" text="Valider" AnchorPane.bottomAnchor="26.666666666666668" AnchorPane.rightAnchor="32.666666666666664" />
+   </children>
+</AnchorPane>
