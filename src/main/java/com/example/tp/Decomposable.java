@@ -1,4 +1,4 @@
-package com.example.tp.utilities;
+package com.example.tp;
 
 public interface Decomposable {
 }
