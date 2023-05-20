@@ -1,18 +1,21 @@
 package com.example.tp;
 
 import java.time.LocalTime;
+import java.util.Date;
 
 public class Creneau {
+    private Date date;
     private LocalTime HeureDebut ;
     private LocalTime HeureFin ;
-    private Boolean bloque ;
+    private Boolean bloque = false;
     static public LocalTime dureeMIN ;
 
     public Creneau(){}
-    public Creneau(LocalTime HD, LocalTime HF, Boolean bloque){
+    public Creneau(LocalTime HD, LocalTime HF, Date date){
+        this.date = date;
         this.HeureDebut = HD;
         this.HeureFin = HF;
-        this.bloque = bloque;
+        //this.bloque = false;
     }
 
     public LocalTime getHeureDebut() {
@@ -37,5 +40,13 @@ public class Creneau {
 
     public void setBloque(Boolean bloque) {
         this.bloque = bloque;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

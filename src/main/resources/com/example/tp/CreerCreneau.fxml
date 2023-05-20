@@ -12,7 +12,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="438.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.CreerCreneauController">
    <children>
       <VBox fillWidth="false" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -71,7 +70,7 @@
                         <HBox alignment="CENTER_LEFT" prefWidth="61.0" spacing="5.0">
                            <children>
                               <RadioButton fx:id="periode" mnemonicParsing="false" prefHeight="18.0" prefWidth="71.0" text="Tous les " toggleGroup="$test" />
-                              <TextField fx:id="periodicite" alignment="CENTER" prefHeight="11.0" prefWidth="30.0" text="x" />
+                              <TextField fx:id="periodicite" alignment="CENTER" prefHeight="11.0" prefWidth="30.0" text="0" />
                               <Label alignment="CENTER" prefHeight="18.0" prefWidth="34.0" text="jours" />
                            </children>
                         </HBox>
@@ -120,8 +119,8 @@
             <AnchorPane prefHeight="34.0" prefWidth="606.0">
                <children>
                   <Button fx:id="ajoutcreneau" alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="171.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 5;" text="+ Ajouter un créneau" />
-                  <Button fx:id="confirmer" alignment="CENTER" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="89.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 5;" text="Confirmer" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="0.0" />
-                  <Button fx:id="annuler" alignment="CENTER" layoutX="318.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="89.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 5;" text="Annuler" AnchorPane.topAnchor="0.0" />
+                  <Button fx:id="confirmer" alignment="CENTER" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleConfirmButton" prefHeight="27.0" prefWidth="89.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 5;" text="Confirmer" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="0.0" />
+                  <Button fx:id="annuler" alignment="CENTER" layoutX="318.0" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="27.0" prefWidth="89.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 5;" text="Annuler" AnchorPane.topAnchor="0.0" />
                </children>
                <VBox.margin>
                   <Insets bottom="15.0" />
