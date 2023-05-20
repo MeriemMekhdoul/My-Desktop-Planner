@@ -15,9 +15,9 @@ public class authentification {
     @FXML
     private TextField UserName;
 
-    private System system;
+    private com.example.tp.system system;
 
-    public void setSystem(System system) {
+    public void setSystem(com.example.tp.system system) {
         this.system = system;
     }
 

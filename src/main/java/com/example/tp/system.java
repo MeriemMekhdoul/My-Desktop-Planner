@@ -2,6 +2,6 @@ package com.example.tp;
 
 import java.util.List;
 
-public class System {
+public class system {
     List<User> user;
 }
