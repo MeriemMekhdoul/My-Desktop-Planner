@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class TacheDecomposee extends Taches {
+
+
     private List<TacheSimple> Simple;
 
     public List<TacheSimple> getSimple() {
