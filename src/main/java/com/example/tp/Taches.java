@@ -1,12 +1,17 @@
 package com.example.tp;
 
 import com.example.tp.utilities.Categorie;
-import com.example.tp.utilities.Creneau;
+import com.example.tp.Creneau;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 abstract class Taches {
-    protected Date deadline;
+    public Taches(){
+        creneau= new Creneau();
+    }
+
+    protected LocalDate deadline;
     protected String name;
     protected Priorite priorite ;
     protected Categorie categorie ;
@@ -51,11 +56,11 @@ abstract class Taches {
         return this.categorie;
 
     }
-    public Date getDeadline(){
+    public LocalDate getDeadline(){
         return this.deadline;
     }
 
-    public void setDeadline(Date deadline) {
+    public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
     }
 }

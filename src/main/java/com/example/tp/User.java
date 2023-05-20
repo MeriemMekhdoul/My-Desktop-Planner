@@ -1,8 +1,6 @@
 package com.example.tp;
 
 import com.example.tp.utilities.Categorie;
-import com.example.tp.utilities.Planning;
-import com.example.tp.utilities.Projet;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,6 +10,7 @@ public class User {
    private List<Taches> tacheList ;
    private  List<Projet> listeProjet;
    private  String Pseudo;
+   private String passward;
    private List<Categorie> categorie;
    private List<Taches> UnsheduledTahces = new ArrayList<>();
    private Calendar calendar;
@@ -86,16 +85,23 @@ public class User {
     }
     public void SuppTache (Taches suppTache){
        tacheList.remove(suppTache);
+        // Creneau creneau= suppTache.getCreneau();
     }
     public void SuppProjet(Projet suppProjet){
         listeProjet.remove(suppProjet);
     }
 
-    public List<Categorie> getCategorie() {
-        return categorie;
-    }
+
 
     public void setCategorie(List<Categorie> categorie) {
         this.categorie = categorie;
+    }
+
+    public String getPassward() {
+        return passward;
+    }
+
+    public void setPassward(String passward) {
+        this.passward = passward;
     }
 }
