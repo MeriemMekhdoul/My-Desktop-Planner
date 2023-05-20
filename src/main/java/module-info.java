@@ -13,4 +13,6 @@ module com.example.tp {
 
     opens com.example.tp to javafx.fxml;
     exports com.example.tp;
+    exports com.example.tp.utilities;
+    opens com.example.tp.utilities to javafx.fxml;
 }
