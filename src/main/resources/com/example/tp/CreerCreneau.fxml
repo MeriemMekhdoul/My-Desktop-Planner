@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="438.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.CreerCreneauController">
+<AnchorPane prefHeight="448.0" prefWidth="600.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.CreerCreneauController">
    <children>
-      <VBox fillWidth="false" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox fx:id="structure" fillWidth="false" prefHeight="467.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label prefHeight="31.0" prefWidth="297.0" text="Créer un nouveau créneau" VBox.vgrow="ALWAYS">
                <font>
@@ -70,7 +70,7 @@
                         <HBox alignment="CENTER_LEFT" prefWidth="61.0" spacing="5.0">
                            <children>
                               <RadioButton fx:id="periode" mnemonicParsing="false" prefHeight="18.0" prefWidth="71.0" text="Tous les " toggleGroup="$test" />
-                              <TextField fx:id="periodicite" alignment="CENTER" prefHeight="11.0" prefWidth="30.0" text="0" />
+                              <TextField fx:id="periodicite" alignment="CENTER" prefHeight="11.0" prefWidth="30.0" text="1" />
                               <Label alignment="CENTER" prefHeight="18.0" prefWidth="34.0" text="jours" />
                            </children>
                         </HBox>
@@ -116,11 +116,11 @@
                   <Insets bottom="15.0" />
                </VBox.margin>
             </VBox>
-            <AnchorPane prefHeight="34.0" prefWidth="606.0">
+            <AnchorPane prefHeight="34.0" prefWidth="606.0" VBox.vgrow="ALWAYS">
                <children>
-                  <Button fx:id="ajoutcreneau" alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="171.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 5;" text="+ Ajouter un créneau" />
-                  <Button fx:id="confirmer" alignment="CENTER" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleConfirmButton" prefHeight="27.0" prefWidth="89.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 5;" text="Confirmer" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="0.0" />
-                  <Button fx:id="annuler" alignment="CENTER" layoutX="318.0" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="27.0" prefWidth="89.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 5;" text="Annuler" AnchorPane.topAnchor="0.0" />
+                  <Button fx:id="ajoutcreneau" alignment="CENTER" mnemonicParsing="false" onAction="#handleAddCreneauButton" prefHeight="26.0" prefWidth="171.0" styleClass="bouton" text="+ Ajouter un créneau" AnchorPane.bottomAnchor="10.0" />
+                  <Button fx:id="terminer" alignment="CENTER" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleConfirmButton" prefHeight="27.0" prefWidth="89.0" styleClass="bouton" text="Terminer" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="20.0" />
+                  <Button fx:id="annuler" alignment="CENTER" layoutX="318.0" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="27.0" prefWidth="89.0" styleClass="bouton" text="Annuler" AnchorPane.bottomAnchor="10.0" />
                </children>
                <VBox.margin>
                   <Insets bottom="15.0" />

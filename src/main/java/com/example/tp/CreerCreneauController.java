@@ -1,21 +1,14 @@
 package com.example.tp;
-import java.time.LocalDate;
-import java.time.Year;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.Calendar;
 import java.util.Date;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
-import java.time.LocalTime;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -45,7 +38,14 @@ public class CreerCreneauController implements Initializable {
     @FXML
     private Button annuler;
     @FXML
-    private Button confirmer;
+    private Button terminer;
+    @FXML
+    private VBox structure;
+    private final Label erreurduree = new Label("Vous ne pouvez pas programmer un créneau d'une durée inférieure à "+Creneau.getDureeMIN());
+    private final Label erreurdateanterieure = new Label("Vous ne pouvez pas programmer un créneau pendant une date antérieure à celle d'aujourd'hui");
+    private final Label erreurHeure = new Label("Heure invalide, veuillez entrer une heure sous ce format : HH:mm");
+    private final Label erreurCreneauVide = new Label("Creneau vide, vous ne pouvez rien enregistrer");
+
     private User user= new User();
 
 
@@ -55,7 +55,20 @@ public class CreerCreneauController implements Initializable {
         //afficher le choix de periode si option périodicité choisie
         defineperiode.visibleProperty().bind(periode.selectedProperty());
 
-        /** *************************************************************** **/
+        erreurdateanterieure.setStyle("-fx-text-fill:#FF0000");
+        erreurduree.setStyle("-fx-text-fill:#FF0000");
+        erreurHeure.setStyle("-fx-text-fill:#FF0000");
+        erreurCreneauVide.setStyle("-fx-text-fill:#FF0000");
+
+        periodicite.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals("0")) {
+                periodicite.setStyle("-fx-text-fill: red; -fx-border-color: red;");
+            } else {
+                periodicite.setStyle(""); // Rétablit le style initial
+            }
+        });
+
+            /** *************************************************************** **/
         //test créer calender user à mettre par la suite dans l'authentification
         boolean calendrierExistant = false;
         for (Calendrier calendrier : user.getCalendriers()) {
@@ -77,70 +90,9 @@ public class CreerCreneauController implements Initializable {
 
     @FXML
     private void handleConfirmButton(){
-        if (!Objects.equals(HD.getText(), ":") && !Objects.equals(HF.getText(), ":")){
-
-        //s'il confirme les données saisies on crée un nv créneau
-        this.nvCreneau = new Creneau();
-                    //get les infos entrées et remplir le créneau crée
-        String heure = HD.getText();
-        LocalTime time = LocalTime.parse(heure);  //récup la donnée entrée sous le format HH:mm
-        nvCreneau.setHeureDebut(time);
-        heure = HF.getText();
-        time = LocalTime.parse(heure);  //récup la donnée entrée sous le format HH:mm
-        nvCreneau.setHeureFin(time);
-
-        if (ajr.isSelected() || (!ajr.isSelected() && !periode.isSelected())){
-            //get la date d'aujourd'hui
-            Calendar calendar = Calendar.getInstance();
-            Date currentDate = calendar.getTime();
-            LocalDate date = currentDate.toInstant().atZone(calendar.getTimeZone().toZoneId()).toLocalDate();
-
-            /*UserManager.getUser()*/user.getCalendar(Year.now().getValue()).getJournee(date).addCreneauLibre(nvCreneau);
-            //nvCreneau.setDate(date);
-            }
-        else if (periode.isSelected()) {
-            // Si le radio bouton "periode" est sélectionné
-            LocalDate debut = pickDebut.getValue();
-            LocalDate fin = pickFin.getValue();
-            int periodicite_ = Integer.parseInt(periodicite.getText());
-
-            if (debut != null && fin != null) {  //si la periode est définie
-                Periode periode = new Periode(debut, fin);
-                setCreneauPeriodique(nvCreneau,periode,periodicite_);
-            }
-            else {  //si la période n'est pas définie
-
-                //get date actuelle :
-                Calendar calendar = Calendar.getInstance();
-                Date currentDate = calendar.getTime();
-                LocalDate today = currentDate.toInstant().atZone(calendar.getTimeZone().toZoneId()).toLocalDate();
-                Periode periode_;
-
-                if (debut != null){  //il a spécifié que le debut de la periode
-                    Year year_ = Year.of(debut.getYear());
-                    LocalDate endOfYear_ = year_.atMonth(12).atEndOfMonth();
-                    periode_ = new Periode(debut,endOfYear_);
-                    setCreneauPeriodique(nvCreneau,periode_,periodicite_);
-                }
-                else if (fin != null)
-                    {  //il a spécifié que la fin de la période
-                    periode_ = new Periode(today,fin);
-                    setCreneauPeriodique(nvCreneau,periode_,periodicite_);
-                    } else //il n'a rien spécifié ni début ni fin
-                        {  //période par défaut : aujourd'hui jusqu'à fin d'année
-                            Year year = Year.of(today.getYear());    //get date fin d'année
-                            LocalDate endOfYear = year.atMonth(12).atEndOfMonth();
-                            periode_ = new Periode(today,endOfYear);
-                            setCreneauPeriodique(nvCreneau,periode_,periodicite_);
-                        }
-                }
-            }
-        } else   //s'il n'a entré aucune donnée
-            System.out.println("Aucune donnée saisie");
-
-        Réinitialiser();
+        handleAddCreneauButton(); //pour ajouter le créneau dernier créneau saisi
+        //penser à fermer la fenêtre
     }
-
     public void setCreneauPeriodique(Creneau creneau, Periode periode, int periodicite){
         LocalDate debut = periode.getDateDebut();
         LocalDate fin = periode.getDatefin();
@@ -163,6 +115,170 @@ public class CreerCreneauController implements Initializable {
         }
     }
     @FXML
+    private void handleAddCreneauButton() {
+        if (!isCreneauVide()) {
+            afficherErreurCreneauVide();
+            return;
+        }
+        enleverErreur();
+        if (!isHeureValide()) {
+            afficherErreurHeure();
+            return;
+        }
+        enleverErreur();
+        if (!isDureeValide()) {
+            afficherErreurDuree();
+            return;
+        }
+        // La condition est vérifiée, enlever le message d'erreur s'il est présent
+        enleverErreur();
+
+        // Continuer avec la création du créneau
+        this.nvCreneau = creerCreneau();
+
+        if (ajr.isSelected() || (!ajr.isSelected() && !periode.isSelected())) {
+            {
+                ajouterCreneauLibreAujourdhui();
+                Réinitialiser();
+            }
+        } else if (periode.isSelected()) {
+            traiterPeriode();
+        }
+    }
+
+    private boolean isHeureValide() {
+        String heureD = HD.getText();
+        String heureF = HF.getText();
+
+        // Vérifier si les heures sont au format HH:mm
+        boolean heureDValide = heureD.matches("\\d{2}:\\d{2}");
+        boolean heureFValide = heureF.matches("\\d{2}:\\d{2}");
+
+        return heureDValide && heureFValide;
+    }
+
+    private boolean isCreneauVide() {
+        String heureDebut = HD.getText();
+        String heureFin = HF.getText();
+        return !Objects.equals(heureDebut, ":") && !Objects.equals(heureFin, ":");
+    }
+
+    private boolean isDureeValide() {
+        LocalTime timeD = LocalTime.parse(HD.getText());
+        LocalTime timeF = LocalTime.parse(HF.getText());
+        Duration duree = Duration.between(timeD, timeF);
+        return duree.compareTo(Creneau.getDureeMIN()) >= 0;
+    }
+
+    private void afficherErreurHeure() {
+        if (!structure.getChildren().contains(erreurHeure)) {
+            structure.getChildren().add(3, erreurHeure);
+        }
+    }
+
+    private void afficherErreurDuree() {
+        if (!structure.getChildren().contains(erreurduree)) {
+            structure.getChildren().add(3, erreurduree);
+        }
+    }
+    private void afficherErreurCreneauVide() {
+        if (!structure.getChildren().contains(erreurCreneauVide)) {
+            structure.getChildren().add(5, erreurCreneauVide);
+        }
+    }
+
+    private void enleverErreur() {
+        if (structure.getChildren().contains(erreurduree)) {
+            structure.getChildren().remove(erreurduree);
+
+        } else if (structure.getChildren().contains(erreurHeure)) {
+            structure.getChildren().remove(erreurHeure);
+
+        } else if (structure.getChildren().contains(erreurdateanterieure)) {
+            structure.getChildren().remove(erreurdateanterieure);
+
+        } else if (structure.getChildren().contains(erreurCreneauVide)) {
+            structure.getChildren().remove(erreurCreneauVide);
+        }
+    }
+
+    private Creneau creerCreneau() {
+        Creneau creneau = new Creneau();
+        String heure = HD.getText();
+        LocalTime time = LocalTime.parse(heure);
+        creneau.setHeureDebut(time);
+        heure = HF.getText();
+        time = LocalTime.parse(heure);
+        creneau.setHeureFin(time);
+        return creneau;
+    }
+
+    private void ajouterCreneauLibreAujourdhui() {
+        Calendar calendar = Calendar.getInstance();
+        Date currentDate = calendar.getTime();
+        LocalDate date = currentDate.toInstant().atZone(calendar.getTimeZone().toZoneId()).toLocalDate();
+        /*UserManager.getUser()*/user.getCalendar(Year.now().getValue()).getJournee(date).addCreneauLibre(nvCreneau);
+    }
+
+    private void traiterPeriode() {
+        LocalDate debut = pickDebut.getValue();
+        LocalDate fin = pickFin.getValue();
+
+        //get date actuelle :
+        Calendar calendar = Calendar.getInstance();
+        Date currentDate = calendar.getTime();
+        LocalDate today = currentDate.toInstant().atZone(calendar.getTimeZone().toZoneId()).toLocalDate();
+
+        if ((debut != null && debut.isBefore(today)) || (fin != null && fin.isBefore(today))) {
+            afficherErreurPeriode();
+            return;
+        }
+
+        // La condition n'est pas vérifiée, enlever le message d'erreur s'il est déjà présent
+        enleverErreurPeriode();
+
+        // Continuer l'exécution
+        int periodicite_ = Integer.parseInt(periodicite.getText());
+        if (periodicite_ != 0) {
+            if (debut != null && fin != null) {
+                Periode periode = new Periode(debut, fin);
+                setCreneauPeriodique(nvCreneau, periode, periodicite_);
+            } else {
+                Periode periode_;
+                if (debut != null) {
+                    Year year_ = Year.of(debut.getYear());
+                    LocalDate endOfYear_ = year_.atMonth(12).atEndOfMonth();
+                    periode_ = new Periode(debut, endOfYear_);
+                    setCreneauPeriodique(nvCreneau, periode_, periodicite_);
+                } else if (fin != null) {
+                    periode_ = new Periode(today, fin);
+                    setCreneauPeriodique(nvCreneau, periode_, periodicite_);
+                } else {
+                    Year year = Year.of(today.getYear());
+                    LocalDate endOfYear = year.atMonth(12).atEndOfMonth();
+                    periode_ = new Periode(today, endOfYear);
+                    setCreneauPeriodique(nvCreneau, periode_, periodicite_);
+                }
+            }
+            Réinitialiser();
+        } else {
+            System.out.println("periodicite nulle");
+        }
+    }
+
+    private void afficherErreurPeriode() {
+        if (!structure.getChildren().contains(erreurdateanterieure)) {
+            structure.getChildren().add(5, erreurdateanterieure);
+        }
+    }
+
+    private void enleverErreurPeriode() {
+        if (structure.getChildren().contains(erreurdateanterieure)) {
+            structure.getChildren().remove(erreurdateanterieure);
+        }
+    }
+
+    @FXML
     private void handleCancelButton(){
         this.nvCreneau = null;
         Réinitialiser();
@@ -182,7 +298,8 @@ public class CreerCreneauController implements Initializable {
         HF.setText(":");
         ajr.setSelected(false);
         periode.setSelected(false);
-        periodicite.setText("0");
+        periodicite.setText("1");
+        periodicite.setStyle("");
     }
     public Creneau getNvCreneau() {
         return nvCreneau;
