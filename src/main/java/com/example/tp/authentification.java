@@ -8,8 +8,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -40,18 +42,36 @@ public class authentification implements Initializable {
     }
 
     @FXML
-    private void handleLoginButton() throws IOException {
+    private void handleLoginButton() throws IOException, ClassNotFoundException {
         String username = UserName.getText();
         String password = MoPass.getText();
-        System.out.println(password);
+        System.out.println("pass i entered"+password);
         boolean authenticated = system1.authenticate(username, password);
         if (authenticated) {
+            FileMyDestcktopPlanner DP= new FileMyDestcktopPlanner();
             statusLabel.setText("Authentication successful");
             system1.SaveListUsers();
             //i need une redirection iciiiiii vers homepage
+            User user= new User();
+            File file= new File(System.getProperty("user.home")+"\\MyDesktopPlanner\\UserInfo"+"\\User-info.bin");
+            if (!file.exists()){
+                DP.CreerDossierDescktopPlanner();
+            }else {
+                user.LoadUtilisateur();
+            }
+
+            UserManager.setUser(user);
             FXMLLoader fxmlLoader=new FXMLLoader(getClass().getResource("HomePage.fxml"));
             Parent root1 = fxmlLoader.load();
             Stage stage = (Stage) SeConnecter.getScene().getWindow();
+            stage.setOnCloseRequest((WindowEvent e) -> {
+                System.out.println("Le bouton de fermeture a été cliqué !");
+                try {
+                    UserManager.getUser().SaveInfoUtilisateur();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
             // Close the stage
             stage.close();
             stage.setScene(new Scene(root1));

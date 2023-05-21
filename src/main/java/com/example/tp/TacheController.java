@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -50,6 +51,11 @@ public class TacheController implements Initializable {
     private Button Valider;
 
     private List<Taches> listeTache;
+    public TacheController(Taches t){
+        this.tache=t;
+    }
+    public TacheController(){}
+
     @FXML
     private void handleSaveButton() {
         boolean isBlocked = bloquee.isSelected();
@@ -134,9 +140,10 @@ public class TacheController implements Initializable {
             tache.creneau.setBloque(isBlocked);
         }
     }
-    User user= new User();
+    private User user;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        user=UserManager.getUser();
         listeTache= new ArrayList<>();
         priorite.getItems().setAll(Priorite.values());
         priorite.setValue(Priorite.HIGH);
@@ -153,9 +160,23 @@ public class TacheController implements Initializable {
             etat.setValue(tache.getEtat());
             categorie.setValue(tache.getCategorie());
             deadline.setValue(tache.getDeadline());
-        }
-    }
 
+        }
+
+
+    }
+    public  void UpdateEncouragement(){
+        if (tache!=null){
+            Etat selectedValue = etat.getSelectionModel().getSelectedItem();
+            if (selectedValue.equals(Etat.COMPLETED)) {
+                System.out.println("Completed option selected");
+                Encouragement encouragement=user.getEncouragement();
+                Planning plan =user.TrouverPlanning(tache);
+                encouragement.updateBadges(tache,plan);
+                // Perform additional actions for when "Completed" is selected
+            }
+
+    }}
     public Taches getTache() {
         return tache;
     }
@@ -167,13 +188,20 @@ public class TacheController implements Initializable {
     private Button NvTache;
     private  boolean stopLoop = false;
     public void NvSetTaches(){
-        while(!stopLoop){
             BloqueHbox.setVisible(false);
             Réinitialiser();
-            NvTache.setOnAction(event ->handleSaveButton() );
+            NvTache.setOnAction(event ->{
+                handleSaveButton();
+                Réinitialiser();
+            });
             Annuler.setOnAction(event -> handleCancelButton());
-            Valider.setOnMouseClicked(mouseEvent ->{ stopLoop=true;});
-        }
+            Valider.setOnMouseClicked(mouseEvent ->{
+                handleSaveButton();
+                /**ici faire la redirection vers le module qui genere auto un set de taches**/
+                Stage stage= (Stage) NvTache.getScene().getWindow();
+                stage.close();
+            });
+
     }
     @FXML
     private HBox BloqueHbox;
@@ -190,7 +218,20 @@ public class TacheController implements Initializable {
         NvTache.setVisible(false);
         BloqueHbox.setVisible(false);
         Réinitialiser();
-        Valider.setOnAction(event ->handleSaveButton() );
+        Valider.setOnAction(event ->{
+            handleSaveButton() ;
+            /**ici faire la redirection vers le module qui genere auto une tache**/
+            Stage stage =(Stage) NvTache.getScene().getWindow();
+            stage.close();});
+        Annuler.setOnAction(event -> handleCancelButton());
+    }
+    public void VisualiserTache(){
+        NvTache.setVisible(false);
+        Valider.setOnAction(event ->{
+            handleSaveButton();
+            Stage stage =(Stage) NvTache.getScene().getWindow();
+            stage.close();
+        } );
         Annuler.setOnAction(event -> handleCancelButton());
     }
 

@@ -1,10 +1,11 @@
 package com.example.tp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.time.LocalDate;
 import java.util.List;
 
-public class Journee {
+public class Journee implements Serializable {
     private LocalDate date;
     private List<Creneau> creneauxLibres;
     private List<Creneau> creneauxPris;
@@ -45,6 +46,11 @@ public class Journee {
     public List<Taches> getTacheList() {
         return tacheList;
     }
+    private int NbrTacheCompletedToday=0;
+    public void IncrementerNbrCompleted(int Nbr){
+        NbrTacheCompletedToday++ ;
+    }
+
     public List<Creneau> getCreneauxLibres() {
         return creneauxLibres;
     }
@@ -71,4 +77,11 @@ public class Journee {
     }
 
 
+    public int getNbrTacheCompletedToday() {
+        return NbrTacheCompletedToday;
+    }
+
+    public void setNbrTacheCompletedToday(int nbrTacheCompletedToday) {
+        NbrTacheCompletedToday = nbrTacheCompletedToday;
+    }
 }

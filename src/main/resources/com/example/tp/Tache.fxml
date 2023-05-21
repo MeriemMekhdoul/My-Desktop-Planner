@@ -55,7 +55,7 @@
             <HBox prefHeight="31.0" prefWidth="312.0">
                <children>
                   <Label text="Etat:" />
-                  <ComboBox fx:id="etat" prefWidth="150.0" />
+                  <ComboBox fx:id="etat" onAction="#UpdateEncouragement" prefWidth="150.0" />
                </children>
             </HBox>
             <HBox fx:id="BloqueHbox" prefHeight="29.0" prefWidth="100.0">

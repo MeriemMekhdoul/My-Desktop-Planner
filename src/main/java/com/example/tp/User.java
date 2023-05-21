@@ -1,7 +1,7 @@
 package com.example.tp;
 
-import com.example.tp.utilities.Categorie;
 import org.mindrot.jbcrypt.BCrypt;
+import java.util.Map;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -16,9 +16,11 @@ public class User implements Serializable {
    private List<Categorie> categorie;
    private List<Taches> UnsheduledTaches = new ArrayList<>();
    private List<Calendrier> calendriers;
+   private Map<Badge,Integer> badges;
 
  //  private Historique histo ;
    static private int minTaskDaily ;
+   private Encouragement encouragement;
 
    public List<Calendrier> getCalendriers(){
        return this.calendriers;
@@ -34,12 +36,14 @@ public class User implements Serializable {
    public User() {
 
        this.tacheList = new ArrayList<>();
+       this.planningList=new ArrayList<>();
        this.categorie = new ArrayList<>();
        this.calendriers = new ArrayList<>();
+       this.encouragement=new Encouragement();
    }
     public User(String username, String Password) {
         this.Pseudo = username;
-        this.password = hashPassword(Password);
+        this.password =Password;
     }
 
    public List<Projet> getListeProjet() {
@@ -113,7 +117,14 @@ public class User implements Serializable {
     public void SuppProjet(Projet suppProjet){
         listeProjet.remove(suppProjet);
     }
-
+    public Planning TrouverPlanning(Taches tache){
+       for(Planning plan:planningList){
+           if (plan.getTacheList().contains(tache)){
+               return plan;
+           }
+       }
+       return null;
+    }
 
     public List<Categorie> getCategorie() {
         return categorie;
@@ -132,7 +143,7 @@ public class User implements Serializable {
     }
     public void SaveInfoUtilisateur() throws IOException {
 
-        FileOutputStream fileout = new FileOutputStream(System.getProperty("user.home")+"\\MyDesktopPlanner\\UserInfo"+"-info.bin");
+        FileOutputStream fileout = new FileOutputStream(System.getProperty("user.home")+"\\MyDesktopPlanner\\UserInfo"+"\\User-info.bin");
         ObjectOutput out = new ObjectOutputStream(fileout);
         out.writeObject(this);
         out.close();
@@ -140,7 +151,7 @@ public class User implements Serializable {
     }
     public void LoadUtilisateur() throws IOException, ClassNotFoundException {
         User Utilisateur;
-        FileInputStream filein = new FileInputStream(System.getProperty("user.home")+"\\MyDesktopPlanner\\UserInfo"+"-info.bin");
+        FileInputStream filein = new FileInputStream(System.getProperty("user.home")+"\\MyDesktopPlanner\\UserInfo"+"\\User-info.bin");
         ObjectInput in = new ObjectInputStream(filein);
         Utilisateur = (User) in.readObject();
         this.Pseudo= Utilisateur.getPseudo();
@@ -161,5 +172,24 @@ public class User implements Serializable {
     public String hashPassword(String password) {
         String salt = BCrypt.gensalt();
         return BCrypt.hashpw(password, salt);
+    }
+
+    public Map<Badge, Integer> getBadges() {
+        return badges;
+    }
+
+    public void setBadges(Map<Badge, Integer> badges) {
+        this.badges = badges;
+    }
+    public void addBadge(Badge badge) {
+        badges.put(badge, badges.getOrDefault(badge, 0) + 1);
+    }
+
+    public Encouragement getEncouragement() {
+        return encouragement;
+    }
+
+    public void setEncouragement(Encouragement encouragement) {
+        this.encouragement = encouragement;
     }
 }

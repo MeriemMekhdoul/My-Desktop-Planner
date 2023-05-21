@@ -29,6 +29,7 @@ public class system implements Serializable{
             System.out.println(user.getPassward());
             if (user.getPseudo().equals(username) ) {
                 System.out.println(user.getPseudo());
+                System.out.println("******"+BCrypt.checkpw(password, user.getPassward()));
                 if (BCrypt.checkpw(password, user.getPassward())) {
                     return true;
                 }

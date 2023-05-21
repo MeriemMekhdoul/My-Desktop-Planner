@@ -1,6 +1,8 @@
 package com.example.tp;
 
-public enum Priorite {
+import java.io.Serializable;
+
+public enum Priorite implements Serializable {
     HIGH,
     MEDIUM,
     LOW,

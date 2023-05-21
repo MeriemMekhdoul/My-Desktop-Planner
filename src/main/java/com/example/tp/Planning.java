@@ -1,16 +1,21 @@
 package com.example.tp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Planning {
+public class Planning implements Serializable {
     private Date dateDebut;
     private Date dateFin;
-    //private List<Journee> journeeList;
+    private List<Journee> journeeList;
     private List<Taches> tacheList;
 
-    public Planning(){}
+    public Planning(){
+        this.tacheList=new ArrayList();
+        this.journeeList=new ArrayList<>();
+
+    }
     public Planning(Date dateDebut, Date dateFin, List<Taches> tacheList){
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
@@ -32,12 +37,12 @@ public class Planning {
         this.dateFin = dateFin;
     }
 
-    /*public List<Journee> getJourneeList() {
+    public List<Journee> getJourneeList() {
         return journeeList;
     }
     public void setJourneeList(List<Journee> journeeList) {
         this.journeeList = journeeList;
-    }*/
+    }
     public List<Taches> getTacheList() {
         return tacheList;
     }

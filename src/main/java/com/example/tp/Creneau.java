@@ -1,10 +1,11 @@
 package com.example.tp;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.time.LocalDate;
 
-public class Creneau {
-    //private LocalDate date;
+public class Creneau implements Serializable {
+    private LocalDate date;
     private LocalTime HeureDebut ;
     private LocalTime HeureFin ;
     private Boolean bloque = false;
@@ -42,13 +43,13 @@ public class Creneau {
         this.bloque = bloque;
     }
 
-    /*public LocalDate getDate() {
+   public LocalDate getDate() {
         return date;
     }
 
     public void setDate(LocalDate date) {
         this.date = date;
-    }*/
+    }
     public String afficherCreneau() {
         return "Heure de début : " + HeureDebut +
                 "\nHeure de fin : " + HeureFin +

@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class HomePageController implements Initializable {
+    private User user;
     @FXML
     private VBox VboxFixe;
 
@@ -24,6 +25,7 @@ public class HomePageController implements Initializable {
     private Button ajouterTache;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        user=UserManager.getUser();
         ajouterTache.setOnAction(event -> {
             try {
                 Creetache(true);
@@ -68,9 +70,16 @@ public class HomePageController implements Initializable {
             stage.show();
             tacheController.NvSetTaches();
         }
-
-
-
+    }
+    public void VisualiserTache(Taches Tache) throws IOException {
+        FXMLLoader fxmlLoader=new FXMLLoader(getClass().getResource("Tache.fxml"));
+        fxmlLoader.setControllerFactory(obj -> new TacheController(Tache));
+        Parent root1 = fxmlLoader.load();
+        TacheController tacheController= fxmlLoader.getController();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root1));
+        stage.show();
+        tacheController.VisualiserTache();
 
     }
 }

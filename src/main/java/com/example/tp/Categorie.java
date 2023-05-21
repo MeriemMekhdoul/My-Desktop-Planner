@@ -1,4 +1,6 @@
 package com.example.tp;
 
-public class Categorie {
+import java.io.Serializable;
+
+public class Categorie implements Serializable {
 }

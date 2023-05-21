@@ -1,8 +1,9 @@
 package com.example.tp;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Periode {
+public class Periode implements Serializable {
     private LocalDate dateDebut;
     private LocalDate datefin;
 

@@ -3,10 +3,11 @@ package com.example.tp;
 import com.example.tp.Categorie;
 import com.example.tp.Creneau;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 
-abstract class Taches {
+abstract class Taches implements Serializable {
     public Taches(){
         creneau= new Creneau();
     }
