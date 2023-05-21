@@ -6,10 +6,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import  java.lang.*;
@@ -44,15 +46,16 @@ public class TacheController implements Initializable {
     private VBox Vbox;
     @FXML
     private ComboBox<Etat> etat;
+    @FXML
+    private Button Valider;
 
-
+    private List<Taches> listeTache;
     @FXML
     private void handleSaveButton() {
         boolean isBlocked = bloquee.isSelected();
         if (tache==null) {
             // Check the state of the checkboxes
             boolean isSimple = simple.isSelected();
-
             boolean isDecomposable = decomposable.isSelected();
             Categorie catg = categorie.getValue();
             Priorite prio = priorite.getValue();
@@ -78,6 +81,7 @@ public class TacheController implements Initializable {
                 tacheSimple.setEtat(etat1);
                 tacheSimple.creneau.setBloque(isBlocked);
                 user.addTache(tacheSimple);
+                listeTache.add(tacheSimple);
             } else if (!isSimple && isDecomposable) {
                 Taches tacheDecomposee = new TacheDecomposee();
                 if (selectedDate != null) {
@@ -106,6 +110,7 @@ public class TacheController implements Initializable {
                 tacheDecomposee.creneau.setBloque(isBlocked);
 
                 user.addTache(tacheDecomposee);
+                listeTache.add(tacheDecomposee);
             } else {
                 Label error = new Label("vous devez choisir un type pour votre tache");
                 Vbox.getChildren().add(5, error);
@@ -132,6 +137,7 @@ public class TacheController implements Initializable {
     User user= new User();
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        listeTache= new ArrayList<>();
         priorite.getItems().setAll(Priorite.values());
         priorite.setValue(Priorite.HIGH);
         etat.setValue(Etat.NOT_REALIZED);
@@ -157,7 +163,45 @@ public class TacheController implements Initializable {
     public void setTache(Taches tache) {
         this.tache = tache;
     }
+    @FXML
+    private Button NvTache;
+    private  boolean stopLoop = false;
+    public void NvSetTaches(){
+        while(!stopLoop){
+            BloqueHbox.setVisible(false);
+            Réinitialiser();
+            NvTache.setOnAction(event ->handleSaveButton() );
+            Annuler.setOnAction(event -> handleCancelButton());
+            Valider.setOnMouseClicked(mouseEvent ->{ stopLoop=true;});
+        }
+    }
+    @FXML
+    private HBox BloqueHbox;
+    @FXML
+    private Button Annuler;
+    @FXML
+    public void handleCancelButton(){
+        this.tache = null;
+        Réinitialiser();
 
+    }
+    @FXML
+    public void AjouterUneSeulTache(){
+        NvTache.setVisible(false);
+        BloqueHbox.setVisible(false);
+        Réinitialiser();
+        Valider.setOnAction(event ->handleSaveButton() );
+        Annuler.setOnAction(event -> handleCancelButton());
+    }
+
+    public void Réinitialiser(){
+        //réinitialiser les champs
+        NomTache.setText("");
+        simple.setSelected(false);
+        decomposable.setSelected(false);
+        Duree.setText("0");
+        bloquee.setSelected(false);
+    }
     // Other methods, event handlers, etc.
 }
 

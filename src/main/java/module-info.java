@@ -11,6 +11,7 @@ module com.example.tp {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires annotations;
+    requires jbcrypt;
 
     opens com.example.tp to javafx.fxml;
     exports com.example.tp;

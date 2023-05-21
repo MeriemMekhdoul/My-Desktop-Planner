@@ -1,16 +1,20 @@
 package com.example.tp;
 
+import com.example.tp.utilities.Categorie;
+import org.mindrot.jbcrypt.BCrypt;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class User {
+public class User implements Serializable {
    private List<Taches> tacheList ;
    private  List<Projet> listeProjet;
    private  String Pseudo;
-   private String passward;
+   private String password;
    private List<Categorie> categorie;
-   private List<Taches> UnsheduledTahces = new ArrayList<>();
+   private List<Taches> UnsheduledTaches = new ArrayList<>();
    private List<Calendrier> calendriers;
 
  //  private Historique histo ;
@@ -33,6 +37,10 @@ public class User {
        this.categorie = new ArrayList<>();
        this.calendriers = new ArrayList<>();
    }
+    public User(String username, String Password) {
+        this.Pseudo = username;
+        this.password = hashPassword(Password);
+    }
 
    public List<Projet> getListeProjet() {
       return listeProjet;
@@ -87,12 +95,12 @@ public class User {
        tacheList.add(newTache);
     }
 
-    public List<Taches> getUnsheduledTahces() {
-        return UnsheduledTahces;
+    public List<Taches> getUnsheduledTaches() {
+        return UnsheduledTaches;
     }
 
-    public void setUnsheduledTahces(List<Taches> unsheduledTahces) {
-        UnsheduledTahces = unsheduledTahces;
+    public void setUnsheduledTaches(List<Taches> unsheduledTahces) {
+        UnsheduledTaches = unsheduledTahces;
     }
     public void addPoject(Projet newProjet )
     {
@@ -116,10 +124,42 @@ public class User {
     }
 
     public String getPassward() {
-        return passward;
+        return password;
     }
 
     public void setPassward(String passward) {
-        this.passward = passward;
+        this.password = passward;
+    }
+    public void SaveInfoUtilisateur() throws IOException {
+
+        FileOutputStream fileout = new FileOutputStream(System.getProperty("user.home")+"\\MyDesktopPlanner\\UserInfo"+"-info.bin");
+        ObjectOutput out = new ObjectOutputStream(fileout);
+        out.writeObject(this);
+        out.close();
+        fileout.close();
+    }
+    public void LoadUtilisateur() throws IOException, ClassNotFoundException {
+        User Utilisateur;
+        FileInputStream filein = new FileInputStream(System.getProperty("user.home")+"\\MyDesktopPlanner\\UserInfo"+"-info.bin");
+        ObjectInput in = new ObjectInputStream(filein);
+        Utilisateur = (User) in.readObject();
+        this.Pseudo= Utilisateur.getPseudo();
+        this.password=Utilisateur.getPassward();
+        this.tacheList=Utilisateur.getTacheList();
+        this.listeProjet= Utilisateur.getListeProjet();
+        this.categorie=Utilisateur.getCategorie();
+        this.planningList= Utilisateur.getPlanningList();
+        this.UnsheduledTaches= Utilisateur.getUnsheduledTaches();
+        this.minTaskDaily=Utilisateur.getMinTaskDaily();
+        filein.close();
+        in.close();
+    }
+    public boolean checkPassword(String pword) {
+        return BCrypt.checkpw(pword, password);
+    }
+
+    public String hashPassword(String password) {
+        String salt = BCrypt.gensalt();
+        return BCrypt.hashpw(password, salt);
     }
 }
