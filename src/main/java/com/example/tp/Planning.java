@@ -1,10 +1,11 @@
 package com.example.tp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Planning {
+public class Planning implements Serializable {
     private Date dateDebut;
     private Date dateFin;
     //private List<Journee> journeeList;

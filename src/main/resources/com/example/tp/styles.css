@@ -1,0 +1,15 @@
+.bouton {
+  -fx-background-color: transparent; /* Couleur de fond par défaut */
+  -fx-text-fill: black; /* Couleur du texte par défaut */
+  -fx-font-family: "Calibri";
+  -fx-font-size: 13px;
+  -fx-border-radius: 5px;
+  -fx-border-color: black;
+  -fx-cursor: hand;
+  -fx-transition: all 0.3s;
+}
+
+.bouton:hover {
+  -fx-background-color: #EDEDED; /* Couleur de fond au survol */
+  -fx-border-color: #999999;
+}

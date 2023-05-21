@@ -1,10 +1,11 @@
 package com.example.tp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.time.LocalDate;
 import java.util.List;
 
-public class Journee {
+public class Journee implements Serializable {
     private LocalDate date;
     private List<Creneau> creneauxLibres;
     private List<Creneau> creneauxPris;

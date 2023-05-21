@@ -1,9 +1,10 @@
 package com.example.tp;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Calendrier {
+public class Calendrier implements Serializable {
     private int annee;
     private List<Mois> mois;
 

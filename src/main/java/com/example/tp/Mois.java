@@ -1,12 +1,13 @@
 package com.example.tp;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class Mois {
+public class Mois implements Serializable {
     private final int numeroMois;
     private final String nom;
     private List<Journee> journees;
