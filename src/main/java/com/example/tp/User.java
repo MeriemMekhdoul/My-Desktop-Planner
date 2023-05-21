@@ -11,11 +11,14 @@ public class User {
    private String passward;
    private List<Categorie> categorie;
    private List<Taches> UnsheduledTahces = new ArrayList<>();
-   private Calendrier calendar;
    private List<Calendrier> calendriers;
 
  //  private Historique histo ;
    static private int minTaskDaily ;
+
+   public List<Calendrier> getCalendriers(){
+       return this.calendriers;
+   }
    public int getMinTaskDaily(){
       return this.minTaskDaily;
    }
@@ -25,8 +28,10 @@ public class User {
    private List<Planning> planningList;
 
    public User() {
-       tacheList = new ArrayList<>();
-       categorie=new ArrayList<>();
+
+       this.tacheList = new ArrayList<>();
+       this.categorie = new ArrayList<>();
+       this.calendriers = new ArrayList<>();
    }
 
    public List<Projet> getListeProjet() {
@@ -71,14 +76,12 @@ public class User {
         }
         return calendrier;
     }
-    public Calendrier newCalender(){
-       Calendrier calendrier = newCalender();
+    public Calendrier newCalender(Calendrier calendrier){
        this.calendriers.add(calendrier);
        return calendrier;
     }
 
     public void setCalendar(Calendrier calendar) {
-        this.calendar = calendar;
     }
     public  void addTache(Taches newTache){
        tacheList.add(newTache);
