@@ -1,6 +1,6 @@
 package com.example.tp;
 
-import com.example.tp.utilities.Categorie;
+import com.example.tp.Categorie;
 import com.example.tp.Creneau;
 
 import java.time.LocalDate;

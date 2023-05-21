@@ -15,9 +15,14 @@ public class User implements Serializable {
    private String password;
    private List<Categorie> categorie;
    private List<Taches> UnsheduledTaches = new ArrayList<>();
-  // private Calendar calendar;
+   private List<Calendrier> calendriers;
+
  //  private Historique histo ;
    static private int minTaskDaily ;
+
+   public List<Calendrier> getCalendriers(){
+       return this.calendriers;
+   }
    public int getMinTaskDaily(){
       return this.minTaskDaily;
    }
@@ -27,8 +32,10 @@ public class User implements Serializable {
    private List<Planning> planningList;
 
    public User() {
-       tacheList = new ArrayList<>();
-       categorie=new ArrayList<>();
+
+       this.tacheList = new ArrayList<>();
+       this.categorie = new ArrayList<>();
+       this.calendriers = new ArrayList<>();
    }
     public User(String username, String Password) {
         this.Pseudo = username;
@@ -67,14 +74,23 @@ public class User implements Serializable {
       Pseudo = pseudo;
    }
 
-  //  public Calendar getCalendar() {
+    public Calendrier getCalendar(int annee) {
+        Calendrier calendrier = null;
+        for (Calendrier c : this.calendriers) {
+            if (c.getAnnee() == annee) {
+                calendrier = c;
+                break;
+            }
+        }
+        return calendrier;
+    }
+    public Calendrier newCalender(Calendrier calendrier){
+       this.calendriers.add(calendrier);
+       return calendrier;
+    }
 
-    //    return calendar;
-    //}
-
-   // public void setCalendar(Calendar calendar) {
-    //    this.calendar = calendar;
-    //}
+    public void setCalendar(Calendrier calendar) {
+    }
     public  void addTache(Taches newTache){
        tacheList.add(newTache);
     }
