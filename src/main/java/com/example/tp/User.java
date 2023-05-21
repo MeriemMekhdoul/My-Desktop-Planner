@@ -1,6 +1,5 @@
 package com.example.tp;
 
-import com.example.tp.utilities.Categorie;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.*;
