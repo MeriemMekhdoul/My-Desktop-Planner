@@ -1,13 +1,22 @@
 package com.example.tp;
 
-import com.dlsc.formsfx.model.structure.PasswordField;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 
-public class authentification {
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+import org.mindrot.jbcrypt.BCrypt;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class authentification implements Initializable {
     @FXML
-    private PasswordField Password;
+    private PasswordField MoPass;
 
     @FXML
     private Button SeConnecter;
@@ -15,15 +24,68 @@ public class authentification {
     @FXML
     private TextField UserName;
 
-    private com.example.tp.system system;
+    private system system1;
+    @FXML
+    private Label statusLabel;
 
     public void setSystem(com.example.tp.system system) {
-        this.system = system;
+        this.system1 = system;
+    }
+    public authentification(system st){
+        this.system1=st;
+    }
+    public String hashPassword(String password) {
+        String salt = BCrypt.gensalt();
+        return BCrypt.hashpw(password, salt);
     }
 
     @FXML
-    private void handleLoginButton() {
+    private void handleLoginButton() throws IOException {
         String username = UserName.getText();
-        String password = Password.getValue();
+        String password = MoPass.getText();
+        System.out.println(password);
+        boolean authenticated = system1.authenticate(username, password);
+        if (authenticated) {
+            statusLabel.setText("Authentication successful");
+            system1.SaveListUsers();
+            //i need une redirection iciiiiii vers homepage
+            FXMLLoader fxmlLoader=new FXMLLoader(getClass().getResource("HomePage.fxml"));
+            Parent root1 = fxmlLoader.load();
+            Stage stage = (Stage) SeConnecter.getScene().getWindow();
+            // Close the stage
+            stage.close();
+            stage.setScene(new Scene(root1));
+            stage.show();
+        } else {
+            statusLabel.setText("Authentication failed");
+        }
+    }
+    @FXML
+    public void handleRegisterButton() throws IOException {
+        String username = UserName.getText();
+        String password = MoPass.getText();
+
+        // Validate form inputs (e.g., check for empty fields, password complexity)
+
+        // Hash the password
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
+        // Create a new user object
+        User newUser = new User(username, hashedPassword);
+        system1.addUser(newUser);
+        system1.SaveListUsers();
+        // Save the user object to the user repository or database
+
+        // Provide feedback to the user confirming the account creation
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Registration Successful");
+        alert.setHeaderText("Account Created");
+        alert.setContentText("Your account has been successfully created.");
+        alert.showAndWait();
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+       // system1= new system();
     }
 }
