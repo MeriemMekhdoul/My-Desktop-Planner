@@ -1,6 +1,7 @@
 package com.example.tp;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.LocalTime;
 import java.time.LocalDate;
 
@@ -9,7 +10,7 @@ public class Creneau implements Serializable {
     private LocalTime HeureDebut ;
     private LocalTime HeureFin ;
     private Boolean bloque = false;
-    static public LocalTime dureeMIN ;
+    private static Duration dureeMIN ;
 
     public Creneau(){}
     public Creneau(LocalTime HD, LocalTime HF/*,LocalDate date*/){
@@ -17,6 +18,14 @@ public class Creneau implements Serializable {
         this.HeureDebut = HD;
         this.HeureFin = HF;
         //this.bloque = false;
+    }
+
+    public static Duration getDureeMIN() {
+        return dureeMIN;
+    }
+
+    public static void setDureeMIN(Duration dureeMIN) {
+        Creneau.dureeMIN = dureeMIN;
     }
 
     public LocalTime getHeureDebut() {
