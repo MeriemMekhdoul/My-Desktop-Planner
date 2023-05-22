@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
@@ -10,64 +12,119 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.TacheController">
+<AnchorPane prefHeight="521.0" prefWidth="529.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.TacheController">
    <children>
-      <VBox fx:id="Vbox" layoutX="14.0" layoutY="14.0" prefHeight="251.0" prefWidth="312.0">
+      <VBox fx:id="Vbox" layoutX="67.0" layoutY="82.0" prefHeight="375.0" prefWidth="388.0" spacing="15.0" AnchorPane.bottomAnchor="82.0">
          <children>
-            <TextField fx:id="NomTache" text="Nom tache" />
-            <HBox prefHeight="29.0" prefWidth="100.0">
+            <TextField fx:id="NomTache" prefHeight="25.0" prefWidth="210.0" styleClass="tous" text="Nom tache" />
+            <HBox alignment="CENTER_LEFT" prefHeight="29.0" prefWidth="100.0" spacing="32.0">
                <children>
-                  <Label text="Durée" />
-                  <TextField fx:id="Duree" />
+                  <Label text="Durée:">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Label>
+                  <TextField fx:id="Duree" prefHeight="25.0" prefWidth="197.0" styleClass="tous" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <HBox prefHeight="29.0" prefWidth="100.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="29.0" prefWidth="100.0" spacing="14.0">
                <children>
-                  <Label text="Deadline:" />
-                  <DatePicker fx:id="deadline" prefHeight="25.0" prefWidth="128.0" />
+                  <Label prefHeight="17.0" prefWidth="59.0" text="Deadline:">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Label>
+                  <DatePicker fx:id="deadline" prefHeight="25.0" prefWidth="281.0" styleClass="tous" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <HBox prefHeight="29.0" prefWidth="100.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="29.0" prefWidth="100.0" spacing="22.0">
                <children>
-                  <Label text="Priorité" />
-                  <ComboBox fx:id="priorite" prefWidth="150.0" />
+                  <Label prefHeight="17.0" prefWidth="51.0" text="Priorité">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Label>
+                  <ComboBox fx:id="priorite" prefHeight="25.0" prefWidth="283.0" style="-fx-background-color: white;" styleClass="tous" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <HBox prefHeight="29.0" prefWidth="100.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="29.0" prefWidth="100.0" spacing="6.0">
                <children>
-                  <Label text="Categorie:" />
-                  <ComboBox fx:id="categorie" prefWidth="150.0" />
+                  <Label prefHeight="17.0" prefWidth="68.0" text="Categorie:">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Label>
+                  <ComboBox fx:id="categorie" prefHeight="25.0" prefWidth="285.0" styleClass="tous" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <HBox prefHeight="29.0" prefWidth="100.0">
+            <Label text="Type de tache:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER" prefHeight="29.0" prefWidth="100.0" spacing="39.0">
                <children>
-                  <Label text="Type de tache:" />
                   <RadioButton fx:id="decomposable" mnemonicParsing="false" text="Decomposable">
                      <toggleGroup>
                         <ToggleGroup fx:id="TypeTache" />
                      </toggleGroup>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <font>
+                        <Font size="13.0" />
+                     </font>
                   </RadioButton>
-                  <RadioButton fx:id="simple" mnemonicParsing="false" text="Simple" toggleGroup="$TypeTache" />
+                  <RadioButton fx:id="simple" mnemonicParsing="false" text="Simple" toggleGroup="$TypeTache">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <font>
+                        <Font size="13.0" />
+                     </font></RadioButton>
                </children>
             </HBox>
-            <HBox prefHeight="31.0" prefWidth="312.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="312.0" spacing="43.0">
                <children>
-                  <Label text="Etat:" />
-                  <ComboBox fx:id="etat" onAction="#UpdateEncouragement" prefWidth="150.0" />
+                  <Label prefHeight="17.0" prefWidth="36.0" text="Etat:">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Label>
+                  <ComboBox fx:id="etat" onAction="#UpdateEncouragement" prefHeight="25.0" prefWidth="286.0" styleClass="tous" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <HBox fx:id="BloqueHbox" prefHeight="29.0" prefWidth="100.0">
+            <HBox fx:id="BloqueHbox" alignment="CENTER_LEFT" prefHeight="29.0" prefWidth="100.0" spacing="11.0">
                <children>
-                  <CheckBox fx:id="bloquee" mnemonicParsing="false" />
-                  <Label text="Bloquée le creneau pour cette tache" />
+                  <CheckBox fx:id="bloquee" mnemonicParsing="false">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></CheckBox>
+                  <Label text="Bloquée le creneau pour cette tache">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Label>
                </children>
             </HBox>
          </children>
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </padding>
       </VBox>
-      <Button fx:id="Valider" layoutX="514.0" layoutY="352.0" mnemonicParsing="false" text="Valider" AnchorPane.bottomAnchor="22.666666666666686" AnchorPane.rightAnchor="32.66666666666663" />
-      <Button fx:id="NvTache" layoutX="31.0" layoutY="348.0" mnemonicParsing="false" text="Ajouter tache" />
-      <Button fx:id="Annuler" layoutX="438.0" layoutY="352.0" mnemonicParsing="false" text="Annuler" />
+      <Label layoutX="20.0" layoutY="23.0" style="-fx-text-fill: #3F9984; -fx-font-weight: bold;" text="Créer une nouvelle tache:">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <HBox layoutX="21.0" layoutY="439.0" prefHeight="39.0" prefWidth="500.0" spacing="15.0" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="21.0">
+         <children>
+            <Button fx:id="NvTache" mnemonicParsing="false" text="Ajouter tache" />
+            <Pane prefHeight="29.0" prefWidth="133.0" HBox.hgrow="ALWAYS" />
+            <Button fx:id="Valider" mnemonicParsing="false" prefHeight="28.0" prefWidth="63.0" text="Valider" />
+            <Button fx:id="Annuler" mnemonicParsing="false" text="Annuler" />
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </HBox>
    </children>
 </AnchorPane>

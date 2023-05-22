@@ -1,39 +1,38 @@
 package com.example.tp;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class Planning implements Serializable {
-    private Date dateDebut;
-    private Date dateFin;
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
     private List<Journee> journeeList;
     private List<Taches> tacheList;
 
     public Planning(){
-        this.tacheList=new ArrayList();
-        this.journeeList=new ArrayList<>();
-
     }
-    public Planning(Date dateDebut, Date dateFin, List<Taches> tacheList){
+    public Planning(LocalDate dateDebut, LocalDate dateFin){
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
-        this.tacheList = new ArrayList<>(tacheList);
+        this.tacheList = new ArrayList<>();
+        this.journeeList=new ArrayList<>();
         //this.journeeList = new ArrayList<>();
     }
 
     //debutSetterGetter
-    public Date getDateDebut() {
+    public LocalDate getDateDebut() {
         return dateDebut;
     }
-    public void setDateDebut(Date dateDebut) {
+    public void setDateDebut(LocalDate dateDebut) {
         this.dateDebut = dateDebut;
     }
-    public Date getDateFin() {
+    public LocalDate getDateFin() {
         return dateFin;
     }
-    public void setDateFin(Date dateFin) {
+    public void setDateFin(LocalDate dateFin) {
         this.dateFin = dateFin;
     }
 

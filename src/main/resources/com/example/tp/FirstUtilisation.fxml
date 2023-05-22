@@ -1,14 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.tp.FirstUtilisation"
-            prefHeight="400.0" prefWidth="600.0">
 
+<AnchorPane prefHeight="499.0" prefWidth="695.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.FirstUtilisation">
+   <children>
+      <VBox alignment="TOP_CENTER" layoutX="31.0" layoutY="84.0" prefHeight="351.0" prefWidth="631.0" spacing="12.0" AnchorPane.leftAnchor="31.0" AnchorPane.rightAnchor="32.66666666666663" AnchorPane.topAnchor="84.0">
+         <children>
+            <Label opacity="0.7" prefHeight="34.0" prefWidth="381.0" text="Notre application est conçue pour vous aider à organiser vos tâches de manière efficace et à gérer votre emploi du temps de manière précise" textAlignment="CENTER" wrapText="true">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Label>
+            <Label text="Pour commencer,créez votre premier planning en définissant la date de début et de fin. Par exemple, créer un planning de révision s'étendant du 12 mai au 1er juin. Vous pouvez ajouter des tâches et/ou cree des créneaux de travaille dans votre planning,Vous avez la possibilité de l'ajuster et de le modifier  ultérieurement selon vos besoins." textAlignment="CENTER" wrapText="true">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="631.0">
+               <children>
+                  <Label prefHeight="18.0" prefWidth="183.0" text="Saisissez la date de début">
+                     <font>
+                        <Font name="Calibri Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <DatePicker fx:id="DD" />
+               </children>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="58.0" prefWidth="327.0">
+               <children>
+                  <Label prefHeight="18.0" prefWidth="183.0" text="Saisissez la date de fin">
+                     <font>
+                        <Font name="Calibri Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <DatePicker fx:id="DF" />
+               </children>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="47.0" prefWidth="631.0" spacing="80.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="141.0" text="Ajouter des taches" />
+                  <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="141.0" text="Ajouter des creneaux" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <Button layoutX="568.0" layoutY="445.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="95.0" style="-fx-background-color: #3F9984; -fx-font-weight: bold; -fx-font-size: 15; -fx-text-fill: white; -fx-border-color: transparent;" text="Terminer" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="31.66666666666667" />
+      <Label layoutX="134.0" layoutY="40.0" text="Bienvenue dans My Desktop Planner" textFill="#3f9984" AnchorPane.topAnchor="40.0">
+         <font>
+            <Font name="System Bold" size="28.0" />
+         </font>
+      </Label>
+   </children>
 </AnchorPane>

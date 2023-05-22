@@ -92,6 +92,10 @@ public class User implements Serializable {
        this.calendriers.add(calendrier);
        return calendrier;
     }
+    public Planning newPlanning(Planning planning){
+        this.planningList.add(planning);
+        return planning;
+    }
 
     public void setCalendar(Calendrier calendar) {
     }
