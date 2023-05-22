@@ -139,7 +139,6 @@ public class HomePageController implements Initializable {
     public void remplirGrille(Mois month) throws IOException {
         List<Journee> journees = month.getJournees(); // Obtient la liste des journées du mois
         int premierJourMois = journees.get(0).getDate().getDayOfWeek().getValue(); // Obtention du premier jour du mois
-        int x =0;
         mois.getChildren().clear(); //vider la grille avant de la remplir de nouveau
 
         // Boucle pour parcourir toutes les journées du mois
@@ -155,20 +154,16 @@ public class HomePageController implements Initializable {
 
             VBox creneaucontainer = new VBox();
             creneaucontainer.setStyle("-fx-background-color:pink;");
-            creneaucontainer.setSpacing(5);
-            //setCreneau(journee,creneaucontainer);
-            creneaucontainer.getChildren().addAll(new Button(), new Button(), new Button(), new Button());
+            creneaucontainer.setSpacing(3);
+            setCreneau(journee,creneaucontainer);
+            //creneaucontainer.getChildren().addAll(new Button(), new Button(), new Button(), new Button());
 
             jour.getChildren().add(dateLabel);
             jour.getChildren().add(creneaucontainer);
-            jour.setPadding(new Insets(15, 10, 10, 10));
+            //jour.setPadding(new Insets(15, 10, 10, 10));
             VBox.setVgrow(dateLabel, Priority.ALWAYS);
             VBox.setVgrow(creneaucontainer, Priority.ALWAYS);
-            VBox.setMargin(creneaucontainer,new Insets(10,0,0,0));
-
-            System.out.println("journee.getDate() = "+journee.getDate());
-            System.out.println("journee.getDate().getDayOfWeek() = "+journee.getDate().getDayOfWeek());
-            System.out.println("journee.getDate().getDayOfWeek().getValue() = "+journee.getDate().getDayOfWeek().getValue());
+            VBox.setMargin(creneaucontainer,new Insets(0,0,0,0));
 
             if (journees.get(0).getDate().getDayOfWeek() == DayOfWeek.SUNDAY ) {
                 premierJourMois=0; // Incrémenter la ligne si la journée se situe entre dimanche et le premier jour du mois
