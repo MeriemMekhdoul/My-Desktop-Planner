@@ -71,7 +71,7 @@ public class authentification implements Initializable {
 
             }
             else{
-                statusLabel.setText("Le mots de passe ou le nom de l'utilisateur est vide");
+                statusLabel.setText("Le mots de passe ou le nom de l'utilisateur est incorrect");
             }
         }
         boolean authenticated = system1.authenticate(username, password);

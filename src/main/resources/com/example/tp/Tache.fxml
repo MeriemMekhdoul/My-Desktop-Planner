@@ -84,7 +84,7 @@
                      </font></RadioButton>
                </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="312.0" spacing="43.0">
+            <HBox fx:id="EtatHbox" alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="312.0" spacing="43.0">
                <children>
                   <Label prefHeight="17.0" prefWidth="36.0" text="Etat:">
                      <font>

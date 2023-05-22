@@ -73,7 +73,6 @@ public class TacheController implements Initializable {
         LocalTime localTime = converter.fromString(durationText);
         Categorie catg = categorie.getValue();
         Priorite prio = priorite.getValue();
-        Etat etat1 = etat.getValue();
         LocalDate selectedDate = deadline.getValue();
         if (tache==null) {
             // Check the state of the checkboxes
@@ -106,7 +105,7 @@ public class TacheController implements Initializable {
                 tacheSimple.setName(NomTache.getText());
                 tacheSimple.setCategorie(catg);
                 tacheSimple.setPriorite(prio);
-                tacheSimple.setEtat(etat1);
+                tacheSimple.setEtat(Etat.NOT_REALIZED);
                 tacheSimple.creneau.setBloque(isBlocked);
                 user.addTache(tacheSimple);
                 listeTache.add(tacheSimple);/** est ce que ns7a9ha???**/
@@ -143,7 +142,7 @@ public class TacheController implements Initializable {
                 tacheDecomposee.setCategorie(catg);
                 tacheDecomposee.setPriorite(prio);
                 System.out.println(tacheDecomposee.getPriorite());
-                tacheDecomposee.setEtat(etat1);
+                tacheDecomposee.setEtat(Etat.NOT_REALIZED);
                 System.out.println(tacheDecomposee.getEtat());
                 tacheDecomposee.creneau.setBloque(isBlocked);
                 user.addTache(tacheDecomposee);
@@ -159,6 +158,7 @@ public class TacheController implements Initializable {
         else {
             // Modifying an existing task
             // Update the task's attributes based on user input
+
             tache.setName(NomTache.getText());
             if (localTime != null) {
                 LocalTime referenceTime = LocalTime.MIDNIGHT;
@@ -168,8 +168,8 @@ public class TacheController implements Initializable {
                 // Invalid input, handle accordingly
                 System.out.println("Invalid duration input");
             }
-            tache.setCategorie(categorie.getValue());
-            tache.setPriorite(priorite.getValue());
+            tache.setCategorie(catg);
+            tache.setPriorite(prio);
             tache.setEtat(etat.getValue());
             if (selectedDate != null) {
                 tache.setDeadline(selectedDate);
@@ -231,6 +231,7 @@ public class TacheController implements Initializable {
     private  boolean stopLoop = false;
     public void NvSetTaches(){
             BloqueHbox.setVisible(false);
+            etat.setDisable(true);
             Réinitialiser();
             NvTache.setOnAction(event ->{
                 handleSaveButton();
@@ -242,6 +243,13 @@ public class TacheController implements Initializable {
                 /**ici faire la redirection vers le module qui genere auto un set de taches**/
                 Stage stage= (Stage) NvTache.getScene().getWindow();
                 stage.close();
+                for (Taches t: user.getTacheList()){
+                    System.out.println("Etat="+t.getEtat());
+                    System.out.println("Duree="+t.getDuree());
+                    System.out.println("prio="+t.getPriorite());
+                    System.out.println("name="+t.getName());
+                    System.out.println("deadline="+t.getDeadline());
+                }
             });
 
     }
@@ -259,13 +267,24 @@ public class TacheController implements Initializable {
     public void AjouterUneSeulTache(){
         NvTache.setVisible(false);
         BloqueHbox.setVisible(false);
+        etat.setDisable(true);
         Valider.setOnAction(event ->{
             handleSaveButton() ;
             /**ici faire la redirection vers le module qui genere auto une tache**/
             Stage stage =(Stage) NvTache.getScene().getWindow();
-            stage.close();});
+            stage.close();
+            for (Taches t: user.getTacheList()){
+                System.out.println("Etat="+t.getEtat());
+                System.out.println("Duree="+t.getDuree());
+                System.out.println("prio="+t.getPriorite());
+                System.out.println("name="+t.getName());
+                System.out.println("deadline="+t.getDeadline());
+            }});
         Annuler.setOnAction(event -> handleCancelButton());
     }
+
+    @FXML
+    private HBox EtatHbox;
     public void VisualiserTache(){
         NvTache.setVisible(false);
         Valider.setOnAction(event ->{

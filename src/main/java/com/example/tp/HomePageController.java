@@ -61,7 +61,13 @@ public class HomePageController implements Initializable {
                 throw new RuntimeException(e);
             }
         });
-
+        for (Taches t: user.getTacheList()){
+            System.out.println("name="+t.getName());
+            System.out.println("Etat="+t.getEtat());
+            System.out.println("Duree="+t.getDuree());
+            System.out.println("prio="+t.getPriorite());
+            System.out.println("deadline="+t.getDeadline());
+        }
 
         /** *************************************************************** **/
         //test créer calender user à mettre par la suite dans l'authentification
@@ -94,7 +100,8 @@ public class HomePageController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
+        Planning plan= new Planning();
+        plan.TrieListeTache(user.getTacheList());
     }
     public void Creetache(Boolean verifie) throws IOException {
         FXMLLoader fxmlLoader=new FXMLLoader(getClass().getResource("Tache.fxml"));
@@ -143,7 +150,7 @@ public class HomePageController implements Initializable {
 
         // Boucle pour parcourir toutes les journées du mois
         for (int i = 1; i <= journees.size(); i++) {
-            System.out.println("journee"+i);
+          //  System.out.println("journee"+i);
             Journee journee = journees.get(i-1);
             // Création du jour container
             VBox jour = new VBox();

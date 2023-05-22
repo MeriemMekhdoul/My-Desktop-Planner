@@ -290,7 +290,6 @@ public class CreerCreneauController implements Initializable {
         Stage stage = (Stage) terminer.getScene().getWindow();
         stage.close();
         //afficher tous les calendriers du user
-        System.out.println("AFFICHAGE DES CALENDRIERS");
         if (user.getCalendriers()!=null){
             for (Calendrier cal: user.getCalendriers()) {
                 System.out.println("cal 1 year : "+cal.getAnnee());
