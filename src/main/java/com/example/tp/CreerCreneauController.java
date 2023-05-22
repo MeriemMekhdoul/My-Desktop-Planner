@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.Objects;
@@ -41,16 +42,20 @@ public class CreerCreneauController implements Initializable {
     private Button terminer;
     @FXML
     private VBox structure;
-    private final Label erreurduree = new Label("Vous ne pouvez pas programmer un créneau d'une durée inférieure à "+Creneau.getDureeMIN());
+    private User user;
+    private Label erreurduree;
     private final Label erreurdateanterieure = new Label("Vous ne pouvez pas programmer un créneau pendant une date antérieure à celle d'aujourd'hui");
     private final Label erreurHeure = new Label("Heure invalide, veuillez entrer une heure sous ce format : HH:mm");
     private final Label erreurCreneauVide = new Label("Creneau vide, vous ne pouvez rien enregistrer");
 
-    private User user= new User();
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        user = UserManager.getUser();
+
+        erreurduree = new Label("Vous ne pouvez pas programmer un créneau d'une durée inférieure à "+ user.getMinCreneau());
+
 
         //afficher le choix de periode si option périodicité choisie
         defineperiode.visibleProperty().bind(periode.selectedProperty());
@@ -68,30 +73,18 @@ public class CreerCreneauController implements Initializable {
             }
         });
 
-            /** *************************************************************** **/
-        //test créer calender user à mettre par la suite dans l'authentification
-        boolean calendrierExistant = false;
-        for (Calendrier calendrier : user.getCalendriers()) {
-            if (calendrier.getAnnee() == Year.now().getValue()) {
-                calendrierExistant = true;
-                // Utilisez l'objet calendrier existant
-                break;
-            }
-        }
-        if (!calendrierExistant) {
-            System.out.println("nv calender crée");
-            Calendrier nouveauCalendrier = new Calendrier(Year.now().getValue());
-            user.getCalendriers().add(nouveauCalendrier);
-            user.getCalendriers().get(0).afficherCalendrier();
-        }
-        /** *************************************************************** **/
 
     }
 
     @FXML
     private void handleConfirmButton(){
         handleAddCreneauButton(); //pour ajouter le créneau dernier créneau saisi
-        //penser à fermer la fenêtre
+
+        if (erreursPresentes()) {
+            return; // Ne pas fermer le stage si des erreurs sont présentes
+        }
+        Stage stage = (Stage) terminer.getScene().getWindow();
+        stage.close();
     }
     public void setCreneauPeriodique(Creneau creneau, Periode periode, int periodicite){
         LocalDate debut = periode.getDateDebut();
@@ -116,6 +109,10 @@ public class CreerCreneauController implements Initializable {
     }
     @FXML
     private void handleAddCreneauButton() {
+        System.out.println("im in isDureeValide ? ......... user.getMinCreneau()"+user.getMinCreneau());
+        System.out.println("im in isDureeValide ? ......... user.getMinTaskDaily()"+user.getMinTaskDaily());
+        System.out.println("im in isDureeValide ? ......... user.getpseudo"+user.getPseudo());
+        System.out.println("im in isDureeValide ? ......... user.getpassword"+user.getPassward());
         if (!isCreneauVide()) {
             afficherErreurCreneauVide();
             return;
@@ -126,10 +123,9 @@ public class CreerCreneauController implements Initializable {
             return;
         }
         enleverErreur();
-        if (!isDureeValide()) {
-            afficherErreurDuree();
+        /*if (!isDureeValide()) {
             return;
-        }
+        }*/
         // La condition est vérifiée, enlever le message d'erreur s'il est présent
         enleverErreur();
 
@@ -160,29 +156,33 @@ public class CreerCreneauController implements Initializable {
     private boolean isCreneauVide() {
         String heureDebut = HD.getText();
         String heureFin = HF.getText();
-        return !Objects.equals(heureDebut, ":") && !Objects.equals(heureFin, ":");
+        return !Objects.equals(heureDebut, ":") && !Objects.equals(heureFin, ":") && !heureFin.isEmpty() && !heureDebut.isEmpty();
     }
 
     private boolean isDureeValide() {
         LocalTime timeD = LocalTime.parse(HD.getText());
         LocalTime timeF = LocalTime.parse(HF.getText());
         Duration duree = Duration.between(timeD, timeF);
-        return duree.compareTo(Creneau.getDureeMIN()) >= 0;
+        System.out.println("im in isDureeValide ......... user.getMinCreneau()"+user.getMinCreneau());
+        return duree.compareTo(user.getMinCreneau()) >= 0;
     }
 
     private void afficherErreurHeure() {
         if (!structure.getChildren().contains(erreurHeure)) {
+            enleverErreur();
             structure.getChildren().add(3, erreurHeure);
         }
     }
 
     private void afficherErreurDuree() {
         if (!structure.getChildren().contains(erreurduree)) {
+            enleverErreur();
             structure.getChildren().add(3, erreurduree);
         }
     }
     private void afficherErreurCreneauVide() {
         if (!structure.getChildren().contains(erreurCreneauVide)) {
+            enleverErreur();
             structure.getChildren().add(5, erreurCreneauVide);
         }
     }
@@ -268,6 +268,7 @@ public class CreerCreneauController implements Initializable {
 
     private void afficherErreurPeriode() {
         if (!structure.getChildren().contains(erreurdateanterieure)) {
+            enleverErreur();
             structure.getChildren().add(5, erreurdateanterieure);
         }
     }
@@ -277,11 +278,17 @@ public class CreerCreneauController implements Initializable {
             structure.getChildren().remove(erreurdateanterieure);
         }
     }
+    private Boolean erreursPresentes(){
+        return structure.getChildren().contains(erreurdateanterieure) || structure.getChildren().contains(erreurCreneauVide) || structure.getChildren().contains(erreurduree) || structure.getChildren().contains(erreurHeure);
+    }
 
     @FXML
     private void handleCancelButton(){
         this.nvCreneau = null;
         Réinitialiser();
+        enleverErreur();
+        Stage stage = (Stage) terminer.getScene().getWindow();
+        stage.close();
         //afficher tous les calendriers du user
         System.out.println("AFFICHAGE DES CALENDRIERS");
         if (user.getCalendriers()!=null){

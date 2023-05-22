@@ -71,3 +71,19 @@ public class JourneeController extends VBox {
         return super.getStyleableNode();
     }
 }
+
+
+
+
+// Crée une instance de JourneeController et appelle la méthode setJournee avec la journée correspondante
+            /*FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("Journee.fxml"));
+            VBox jour = fxmlLoader.load();
+            JourneeController journeeController = fxmlLoader.getController();
+            //JourneeController journeeController = new JourneeController();
+            journeeController.setDate(journee.getDate());
+            System.out.println("get date dans ................"+journeeController.getDate());
+            journeeController.setCreneau(journee);*/
+
+// Ajoute la journée à la grille en respectant les critères de positionnement
+//Button btn = new Button("test "+i);

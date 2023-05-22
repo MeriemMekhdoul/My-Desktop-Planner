@@ -24,11 +24,12 @@ public class Main extends Application {
         }
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("authentification.fxml"));
         fxmlLoader.setControllerFactory(obj -> new authentification(s));
-        Screen screen = Screen.getPrimary();
-        Scene scene = new Scene(fxmlLoader.load(),screen.getBounds().getWidth(),screen.getBounds().getHeight());
+        //Screen screen = Screen.getPrimary();
+        //Scene scene = new Scene(fxmlLoader.load(),screen.getBounds().getWidth(),screen.getBounds().getHeight());
+        Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("My Desktop Planner");
         stage.setScene(scene);
-        stage.setFullScreen(true);
+        //stage.setFullScreen(true);
         stage.show();
     }
 

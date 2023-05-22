@@ -19,30 +19,21 @@ public class User implements Serializable {
    private List<Taches> UnsheduledTaches = new ArrayList<>();
    private List<Calendrier> calendriers;
    private Map<Badge,Integer> badges;
-   private Duration MinCreneau;
+   private Duration MinCreneau = Duration.ofMinutes(30);
 
  //  private Historique histo ;
    static private int minTaskDaily ;
    private Encouragement encouragement;
 
-   public List<Calendrier> getCalendriers(){
-       return this.calendriers;
-   }
-   public int getMinTaskDaily(){
-      return this.minTaskDaily;
-   }
-   public  void setMinTaskDaily(int min){
-      this.minTaskDaily= min;
-   }
    private List<Planning> planningList;
 
    public User() {
 
        this.tacheList = new ArrayList<>();
-       this.planningList=new ArrayList<>();
+       this.planningList = new ArrayList<>();
        this.categorie = new ArrayList<>();
        this.calendriers = new ArrayList<>();
-       this.encouragement=new Encouragement();
+       this.encouragement = new Encouragement();
    }
     public User(String username, String Password) {
         this.Pseudo = username;
@@ -176,7 +167,7 @@ public class User implements Serializable {
         this.categorie=Utilisateur.getCategorie();
         this.planningList= Utilisateur.getPlanningList();
         this.UnsheduledTaches= Utilisateur.getUnsheduledTaches();
-        this.minTaskDaily=Utilisateur.getMinTaskDaily();
+        minTaskDaily=Utilisateur.getMinTaskDaily();
         this.MinCreneau=Utilisateur.getMinCreneau();
         filein.close();
         in.close();
@@ -215,5 +206,15 @@ public class User implements Serializable {
 
     public void setMinCreneau(Duration minCreneau) {
         MinCreneau = minCreneau;
+    }
+
+    public List<Calendrier> getCalendriers(){
+        return this.calendriers;
+    }
+    public int getMinTaskDaily(){
+        return minTaskDaily;
+    }
+    public  void setMinTaskDaily(int min){
+        minTaskDaily= min;
     }
 }
