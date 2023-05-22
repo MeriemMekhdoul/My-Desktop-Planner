@@ -42,16 +42,13 @@ public class Planning implements Serializable {
     }
     //endSetterGetter
 
-    /*public void addjournee(Journee journee){
-        this.journeeList.add(journee);
-    }
-    public void suppjournee(Journee journee){
-        this.journeeList.remove(journee);
-    }*/
     public void addtache(Taches tache){
         this.tacheList.add(tache);
     }
     public void supptache(Taches tache){
         this.tacheList.remove(tache);
+    }
+    public void TrieListeTache (List<Taches> tacheList){
+
     }
 }

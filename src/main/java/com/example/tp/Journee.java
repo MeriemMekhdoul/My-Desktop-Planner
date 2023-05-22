@@ -84,4 +84,5 @@ public class Journee implements Serializable {
     public void setNbrTacheCompletedToday(int nbrTacheCompletedToday) {
         NbrTacheCompletedToday = nbrTacheCompletedToday;
     }
+
 }

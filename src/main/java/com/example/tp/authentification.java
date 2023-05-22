@@ -81,14 +81,13 @@ public class authentification implements Initializable {
             system1.SaveListUsers();
             //i need une redirection iciiiiii vers homepage
             User user= new User();
+            user.setPseudo(username);
+            user.setPassward(password);
+            UserManager.setUser(user);
             File file= new File(System.getProperty("user.home")+"\\MyDesktopPlanner\\UserInfo"+"\\User-info.bin");
-            if (!file.exists()){
-                DP.CreerDossierDescktopPlanner();
-            }else {
+            if (file.exists()){
                 user.LoadUtilisateur();
             }
-
-            UserManager.setUser(user);
             FXMLLoader fxmlLoader=new FXMLLoader(getClass().getResource("HomePage.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = (Stage) SeConnecter.getScene().getWindow();

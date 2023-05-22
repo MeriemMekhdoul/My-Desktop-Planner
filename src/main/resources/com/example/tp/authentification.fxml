@@ -45,7 +45,7 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </Button>
-                              <Label fx:id="statusLabel" prefHeight="23.0" prefWidth="279.0" textFill="RED" wrapText="true" />
+                              <Label fx:id="statusLabel" alignment="CENTER" prefHeight="23.0" prefWidth="279.0" textFill="RED" wrapText="true" />
                            </children>
                         </VBox>
                         <Button fx:id="SeConnecter" mnemonicParsing="false" onAction="#handleLoginButton" prefHeight="25.0" prefWidth="180.0" text="Se connecter">

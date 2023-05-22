@@ -82,6 +82,7 @@ public class FirstUtilisation implements Initializable {
         user.newPlanning(plan);
         Stage stage = (Stage) DF.getScene().getWindow();
         stage.close();
+        System.out.println(user.getMinCreneau()+"       "+user.getMinTaskDaily());
         /**ici remplir dans le calendrier de home page**/
     }
     @FXML

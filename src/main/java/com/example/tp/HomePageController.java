@@ -34,7 +34,7 @@ public class HomePageController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         user=UserManager.getUser();
-
+        System.out.println("passward="+user.getPassward()+"     name="+user.getPseudo());
         ajouterTache.setOnAction(event -> {
             try {
                 Creetache(true);
