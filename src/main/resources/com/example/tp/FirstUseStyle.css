@@ -1,0 +1,21 @@
+
+.InfoField {
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: #ccc;
+    -fx-padding: 5px;
+}
+.label{
+    -fx-font-family: "Calibri";
+}
+
+.button {
+    -fx-text-fill:white;
+    -fx-background-color: #3F9984;
+    -fx-font-family: "Calibri";
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-font-weight:bold;
+    -fx-cursor: hand;
+}

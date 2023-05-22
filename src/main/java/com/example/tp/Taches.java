@@ -4,6 +4,7 @@ import com.example.tp.Categorie;
 import com.example.tp.Creneau;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -17,7 +18,7 @@ abstract class Taches implements Serializable {
     protected Priorite priorite ;
     protected Categorie categorie ;
     protected Etat etat;
-    protected String duree ;
+    protected Duration duree ;
     protected Creneau creneau;
 
     public void setName(String Name){
@@ -37,10 +38,10 @@ abstract class Taches implements Serializable {
     public void setEtat(Etat etat1){
         this.etat=etat1;
     }
-    public void setDuree(String Duree){
+    public void setDuree(Duration Duree){
         this.duree= Duree;
     }
-    public String getDuree(){
+    public Duration getDuree(){
         return this.duree;
     }
     public Creneau getCreneau(){

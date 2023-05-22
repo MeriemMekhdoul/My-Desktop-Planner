@@ -24,14 +24,13 @@ public class Encouragement implements Serializable {
     }
     public void updateBadges(Taches tache,Planning planning) {
         int consecutiveGoodCount = 0;
-        LocalDate date =tache.creneau.getDate();
-        int year = date.getYear();
+        LocalDate dateD =tache.creneau.getDate();
+        int year = dateD.getYear();//Revoir apres
         user=UserManager.getUser();
         Calendrier cald= user.getCalendar(year);
-        Journee journee1=cald.getJournee(date);
-        int startingDay = planning.getJourneeList().lastIndexOf(journee1);
-        for (int i= startingDay ;i<planning.getJourneeList().size();i++ ) {
-            Journee journee = planning.getJourneeList().get(i);
+        LocalDate dateFin=planning.getDateFin();
+        while (!dateD.isAfter(dateFin)) {
+            Journee journee = cald.getJournee(dateD);
             int completedCount = countCompletedTasks(journee);
             if (completedCount >= 3) {
                 // Update badge for Good
@@ -53,6 +52,7 @@ public class Encouragement implements Serializable {
                 consecutiveGoodCount = 0;
                 BadgeVeryGood = 0;
             }
+            dateD = dateD.plusDays(1);
         }
     }
 

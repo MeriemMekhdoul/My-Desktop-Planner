@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.mindrot.jbcrypt.BCrypt;
@@ -62,7 +63,7 @@ public class authentification implements Initializable {
 
             UserManager.setUser(user);
             FXMLLoader fxmlLoader=new FXMLLoader(getClass().getResource("HomePage.fxml"));
-            Parent root1 = fxmlLoader.load();
+            Parent root = fxmlLoader.load();
             Stage stage = (Stage) SeConnecter.getScene().getWindow();
             stage.setOnCloseRequest((WindowEvent e) -> {
                 System.out.println("Le bouton de fermeture a été cliqué !");
@@ -74,14 +75,32 @@ public class authentification implements Initializable {
             });
             // Close the stage
             stage.close();
-            stage.setScene(new Scene(root1));
+            Screen screen = Screen.getPrimary();
+            stage.setScene(new Scene(root,screen.getBounds().getWidth(),screen.getBounds().getHeight()));
+            stage.setFullScreen(true);
             stage.show();
+            if (premierUtilisation){
+                FXMLLoader fxmlLoader1=new FXMLLoader(getClass().getResource("HomePage.fxml"));
+                Parent root1 = fxmlLoader1.load();
+                stage.setScene(new Scene(root1));
+                stage.show();
+            }
         } else {
             statusLabel.setText("Authentication failed");
         }
     }
     @FXML
+    private Label label;
+    @FXML
+    private Button inscriptionButton;
+    private  boolean premierUtilisation;
+
+    @FXML
     public void handleRegisterButton() throws IOException {
+        label.setText("Inscrivez-vous");
+        inscriptionButton.setVisible(false);
+        SeConnecter.setText("s'inscrire");
+        premierUtilisation=true;
         String username = UserName.getText();
         String password = MoPass.getText();
 

@@ -9,7 +9,6 @@ import java.util.List;
 public class Planning implements Serializable {
     private LocalDate dateDebut;
     private LocalDate dateFin;
-    private List<Journee> journeeList;
     private List<Taches> tacheList;
 
     public Planning(){
@@ -18,7 +17,6 @@ public class Planning implements Serializable {
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         this.tacheList = new ArrayList<>();
-        this.journeeList=new ArrayList<>();
         //this.journeeList = new ArrayList<>();
     }
 
@@ -36,12 +34,6 @@ public class Planning implements Serializable {
         this.dateFin = dateFin;
     }
 
-    public List<Journee> getJourneeList() {
-        return journeeList;
-    }
-    public void setJourneeList(List<Journee> journeeList) {
-        this.journeeList = journeeList;
-    }
     public List<Taches> getTacheList() {
         return tacheList;
     }

@@ -4,62 +4,125 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="499.0" prefWidth="695.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.FirstUtilisation">
+<AnchorPane prefHeight="642.0" prefWidth="924.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.FirstUtilisation">
    <children>
-      <VBox alignment="TOP_CENTER" layoutX="31.0" layoutY="84.0" prefHeight="351.0" prefWidth="631.0" spacing="12.0" AnchorPane.leftAnchor="31.0" AnchorPane.rightAnchor="32.66666666666663" AnchorPane.topAnchor="84.0">
+      <VBox alignment="TOP_CENTER" layoutX="23.0" layoutY="82.0" prefHeight="500.0" prefWidth="878.0" spacing="12.0" AnchorPane.leftAnchor="23.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="82.0">
          <children>
-            <Label opacity="0.7" prefHeight="34.0" prefWidth="381.0" text="Notre application est conçue pour vous aider à organiser vos tâches de manière efficace et à gérer votre emploi du temps de manière précise" textAlignment="CENTER" wrapText="true">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-            <Label text="Pour commencer,créez votre premier planning en définissant la date de début et de fin. Par exemple, créer un planning de révision s'étendant du 12 mai au 1er juin. Vous pouvez ajouter des tâches et/ou cree des créneaux de travaille dans votre planning,Vous avez la possibilité de l'ajuster et de le modifier  ultérieurement selon vos besoins." textAlignment="CENTER" wrapText="true">
+            <Label prefHeight="57.0" prefWidth="813.0" text="Pour commencer,créez votre premier planning en définissant la date de début et de fin. Par exemple, créer un planning de révision s'étendant du 12 mai au 1er juin. Vous pouvez ajouter des tâches et/ou cree des créneaux de travaille dans votre planning,Vous avez la possibilité de l'ajuster et de le modifier  ultérieurement selon vos besoins." textAlignment="CENTER" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font>
+               <VBox.margin>
+                  <Insets bottom="24.0" left="10.0" right="10.0" top="32.0" />
+               </VBox.margin>
             </Label>
-            <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="631.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="631.0" spacing="20.0">
                <children>
-                  <Label prefHeight="18.0" prefWidth="183.0" text="Saisissez la date de début">
+                  <Label text="Saisissez la date de début:">
                      <font>
-                        <Font name="Calibri Bold" size="15.0" />
+                        <Font size="13.0" />
                      </font>
                   </Label>
                   <DatePicker fx:id="DD" />
                </children>
                <padding>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                  <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
                </padding>
+               <VBox.margin>
+                  <Insets left="50.0" />
+               </VBox.margin>
             </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="58.0" prefWidth="327.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="41.0" prefWidth="631.0" spacing="36.0">
                <children>
-                  <Label prefHeight="18.0" prefWidth="183.0" text="Saisissez la date de fin">
+                  <Label text="Saisissez la date de fin:">
                      <font>
-                        <Font name="Calibri Bold" size="15.0" />
+                        <Font size="13.0" />
                      </font>
                   </Label>
                   <DatePicker fx:id="DF" />
                </children>
                <padding>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                  <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
                </padding>
+               <VBox.margin>
+                  <Insets left="50.0" />
+               </VBox.margin>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="47.0" prefWidth="631.0" spacing="80.0" VBox.vgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT" prefHeight="41.0" prefWidth="631.0" spacing="20.0">
+               <padding>
+                  <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
+               </padding>
                <children>
-                  <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="141.0" text="Ajouter des taches" />
-                  <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="141.0" text="Ajouter des creneaux" />
+                  <Label text="Entrez le nombre minimale de tache que vous voules realiser par jour: ">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="MinTache" styleClass="InfoField" />
                </children>
+               <VBox.margin>
+                  <Insets left="50.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="41.0" prefWidth="631.0" spacing="170.0">
+               <padding>
+                  <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
+               </padding>
+               <children>
+                  <Label text="Entrez la durée minimale du vos creneaux:">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="MinCreneau" styleClass="InfoField" />
+               </children>
+               <VBox.margin>
+                  <Insets left="50.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="41.0" prefWidth="631.0" spacing="168.0">
+               <padding>
+                  <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
+               </padding>
+               <children>
+                  <Label text="Clickez ici pour ajouter des taches">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="AjoutTache" mnemonicParsing="false" prefHeight="32.0" prefWidth="141.0" text="Ajouter des taches" />
+               </children>
+               <VBox.margin>
+                  <Insets left="50.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="41.0" prefWidth="631.0" spacing="155.0">
+               <padding>
+                  <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
+               </padding>
+               <children>
+                  <Label text="Clicker ici pour ajouter des creneaux">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <Button mnemonicParsing="false" onAction="#CreeCreneau" prefHeight="32.0" prefWidth="141.0" text="Ajouter des creneaux" />
+               </children>
+               <VBox.margin>
+                  <Insets left="50.0" />
+               </VBox.margin>
             </HBox>
          </children>
       </VBox>
-      <Button layoutX="568.0" layoutY="445.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="95.0" style="-fx-background-color: #3F9984; -fx-font-weight: bold; -fx-font-size: 15; -fx-text-fill: white; -fx-border-color: transparent;" text="Terminer" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="31.66666666666667" />
-      <Label layoutX="134.0" layoutY="40.0" text="Bienvenue dans My Desktop Planner" textFill="#3f9984" AnchorPane.topAnchor="40.0">
+      <Button layoutX="568.0" layoutY="445.0" mnemonicParsing="false" onAction="#Terminer" prefHeight="34.0" prefWidth="95.0" style="-fx-font-size: 15; -fx-text-fill: white; -fx-background-color: #23574B;" text="Terminer" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="31.66666666666667" />
+      <Label layoutX="252.0" layoutY="45.0" style="-fx-text-fill: #23574B;" text="Bienvenue dans My Desktop Planner" textFill="#3f9984" AnchorPane.topAnchor="45.0">
          <font>
             <Font name="System Bold" size="28.0" />
          </font>
