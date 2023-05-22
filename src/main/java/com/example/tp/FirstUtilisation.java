@@ -74,7 +74,8 @@ public class FirstUtilisation implements Initializable {
             // Invalid input, handle accordingly
             System.out.println("Invalid duration input");
         }
-        user.setMinTaskDaily(Integer.parseInt(MinTache.getText()));
+        if (!MinTache.getText().isEmpty()){
+        user.setMinTaskDaily(Integer.parseInt(MinTache.getText()));}
         LocalDate dateF= DF.getValue();
         LocalDate dateD= DD.getValue();
         Planning plan= new Planning(dateD,dateF);

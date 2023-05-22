@@ -9,8 +9,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import org.mindrot.jbcrypt.BCrypt;
+import javafx.scene.input.MouseEvent;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +50,30 @@ public class authentification implements Initializable {
         String username = UserName.getText();
         String password = MoPass.getText();
         System.out.println("pass i entered"+password);
+        if (premierUtilisation){
+            if (!password.isEmpty() && !username.isEmpty()){
+                // Hash the password
+                String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
+                // Create a new user object
+                User newUser = new User(username, hashedPassword);
+                system1.addUser(newUser);
+                system1.SaveListUsers();
+                // Save the user object to the user repository or database
+
+                // Provide feedback to the user confirming the account creation
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Registration Successful");
+                alert.setHeaderText("Account Created");
+                alert.setContentText("Your account has been successfully created.");
+                alert.showAndWait();
+
+
+            }
+            else{
+                statusLabel.setText("Le mots de passe ou le nom de l'utilisateur est vide");
+            }
+        }
         boolean authenticated = system1.authenticate(username, password);
         if (authenticated) {
             FileMyDestcktopPlanner DP= new FileMyDestcktopPlanner();
@@ -75,18 +102,27 @@ public class authentification implements Initializable {
             });
             // Close the stage
             stage.close();
-            Screen screen = Screen.getPrimary();
-            stage.setScene(new Scene(root,screen.getBounds().getWidth(),screen.getBounds().getHeight()));
-            stage.setFullScreen(true);
+            //Screen screen = Screen.getPrimary();
+            stage.setScene(new Scene(root));
+           // stage.setFullScreen(true);
             stage.show();
-            if (premierUtilisation){
-                FXMLLoader fxmlLoader1=new FXMLLoader(getClass().getResource("HomePage.fxml"));
+            if(premierUtilisation){
+                Stage stage1=new Stage();
+                stage1.initStyle(StageStyle.UNDECORATED);
+
+                System.out.println("*************************************Premier utilisation");
+                FXMLLoader fxmlLoader1=new FXMLLoader(getClass().getResource("FirstUtilisation.fxml"));
                 Parent root1 = fxmlLoader1.load();
-                stage.setScene(new Scene(root1));
-                stage.show();
+                Scene scene = new Scene(root1);
+                stage1.setScene(scene);
+                scene.setOnMousePressed(this::onMousePressed);
+                scene.setOnMouseDragged(this::onMouseDragged);
+                stage1.show();
             }
+
         } else {
-            statusLabel.setText("Authentication failed");
+            if (!premierUtilisation){
+            statusLabel.setText("Mot de passe ou nom utilisateur incorrect");}
         }
     }
     @FXML
@@ -101,30 +137,25 @@ public class authentification implements Initializable {
         inscriptionButton.setVisible(false);
         SeConnecter.setText("s'inscrire");
         premierUtilisation=true;
-        String username = UserName.getText();
-        String password = MoPass.getText();
-
         // Validate form inputs (e.g., check for empty fields, password complexity)
 
-        // Hash the password
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-
-        // Create a new user object
-        User newUser = new User(username, hashedPassword);
-        system1.addUser(newUser);
-        system1.SaveListUsers();
-        // Save the user object to the user repository or database
-
-        // Provide feedback to the user confirming the account creation
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Registration Successful");
-        alert.setHeaderText("Account Created");
-        alert.setContentText("Your account has been successfully created.");
-        alert.showAndWait();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
        // system1= new system();
+    }
+
+    private double xOffset = 0;
+    private double yOffset = 0;
+    private void onMousePressed(MouseEvent event) {
+        xOffset = event.getSceneX();
+        yOffset = event.getSceneY();
+    }
+
+    private void onMouseDragged(MouseEvent event) {
+        Stage stage = (Stage) ((Scene) event.getSource()).getWindow();
+        stage.setX(event.getScreenX() - xOffset);
+        stage.setY(event.getScreenY() - yOffset);
     }
 }
