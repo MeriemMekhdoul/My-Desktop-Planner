@@ -7,25 +7,34 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.scene.control.Label;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class HomePageController implements Initializable {
     private User user;
     @FXML
     private VBox VboxFixe;
-
+    @FXML
+    private Label MoisAnnee;
     @FXML
     private Button SetTache;
     @FXML
     private Button ajouterTache;
+    @FXML
+    private GridPane mois;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         user=UserManager.getUser();
+
         ajouterTache.setOnAction(event -> {
             try {
                 Creetache(true);
@@ -40,6 +49,15 @@ public class HomePageController implements Initializable {
                 throw new RuntimeException(e);
             }
         });
+
+        // Obtenir la date actuelle (mois et année)
+        LocalDate currentDate = LocalDate.now();
+        int numeroMois = currentDate.getMonthValue();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM - yyyy");
+        String moisAnnee = currentDate.format(formatter);
+        MoisAnnee.setText(moisAnnee);
+
+        remplirGrille(new Mois(numeroMois));
     }
     public void Creetache(Boolean verifie) throws IOException {
         FXMLLoader fxmlLoader=new FXMLLoader(getClass().getResource("Tache.fxml"));
@@ -60,8 +78,7 @@ public class HomePageController implements Initializable {
             });
 
             ajouterManu.setOnAction(event -> System.out.println("Ajouter manuellement"));
-            /**  ici il faut lui ouvrir le calendrier et lui demander de choisir un des creneaux libre qui seron highlited then on ouvre le fxml Tache to fill the informations
-**/
+            /**  ici il faut lui ouvrir le calendrier et lui demander de choisir un des creneaux libre qui seront highlited then on ouvre le fxml Tache to fill the informations **/
 
         }
         else {
@@ -81,5 +98,22 @@ public class HomePageController implements Initializable {
         stage.show();
         tacheController.VisualiserTache();
 
+    }
+    public void remplirGrille(Mois month) {
+        List<Journee> journees = month.getJournees(); // Obtient la liste des journées du mois
+
+        // Boucle pour parcourir toutes les journées du mois
+        for (int i = 0; i < journees.size(); i++) {
+            Journee journee = journees.get(i);
+
+            // Crée une instance de JourneeController et appelle la méthode setJournee avec la journée correspondante
+            JourneeController journeeController = new JourneeController();
+            journeeController.setCreneau(journee);
+
+            // Ajoute la journée à la grille en respectant les critères de positionnement
+            int colonne = journee.getDate().getDayOfWeek().getValue() % 7;
+            int ligne = i / 7; // Calcule la ligne en fonction de l'indice de la journée dans le mois
+            mois.add(journeeController, ligne, colonne);
+        }
     }
 }

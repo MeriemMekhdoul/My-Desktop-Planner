@@ -21,8 +21,8 @@ public class Main extends Application {
         }else {
             s.LoadListUsers();
         }
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("CreerCreneau.fxml"));
-        //fxmlLoader.setControllerFactory(obj -> new authentification(s));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("authentification.fxml"));
+        fxmlLoader.setControllerFactory(obj -> new authentification(s));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("My Desktop Planner");
         stage.setScene(scene);

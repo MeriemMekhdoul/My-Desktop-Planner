@@ -5,15 +5,17 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.HomePageController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="713.0" prefWidth="1060.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.HomePageController">
    <left>
-      <VBox fx:id="VboxFixe" alignment="TOP_CENTER" prefHeight="620.0" prefWidth="157.0" spacing="14.0" style="-fx-background-color: gray;" BorderPane.alignment="CENTER">
+      <VBox fx:id="VboxFixe" prefHeight="620.0" prefWidth="157.0" spacing="14.0" style="-fx-background-color: gray;" BorderPane.alignment="CENTER">
          <children>
             <ImageView fitHeight="62.0" fitWidth="89.0" pickOnBounds="true" preserveRatio="true" />
             <Pane prefHeight="61.0" prefWidth="127.0" />
@@ -36,9 +38,9 @@
    <center>
       <VBox prefHeight="620.0" prefWidth="880.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="16.0" VBox.vgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="902.0" spacing="16.0" VBox.vgrow="ALWAYS">
                <children>
-                  <Label prefHeight="47.0" prefWidth="225.0" text="Mois-Annee">
+                  <Label fx:id="MoisAnnee" prefHeight="47.0" prefWidth="225.0" text="Mois-Annee">
                      <font>
                         <Font size="32.0" />
                      </font>
@@ -48,17 +50,33 @@
                   <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="56.0" text="Suiv" />
                </children>
                <padding>
-                  <Insets bottom="20.0" left="50.0" right="20.0" top="20.0" />
+                  <Insets bottom="20.0" left="50.0" right="20.0" top="30.0" />
                </padding>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
             </HBox>
-            <TilePane prefHeight="523.0" prefWidth="893.0" style="-fx-background-color: lightgray;" VBox.vgrow="ALWAYS">
+            <GridPane fx:id="mois" gridLinesVisible="true" hgap="3.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="597.0" prefWidth="902.0" style="-fx-background-color: gray;" vgap="3.0" VBox.vgrow="ALWAYS">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
                <VBox.margin>
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </VBox.margin>
-               <children>
-                  <VBox prefHeight="109.0" prefWidth="109.0" style="-fx-background-color: black;" />
-               </children>
-            </TilePane>
+            </GridPane>
          </children>
       </VBox>
    </center>
