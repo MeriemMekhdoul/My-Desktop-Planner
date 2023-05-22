@@ -3,6 +3,7 @@ package com.example.tp;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 
@@ -23,9 +24,11 @@ public class Main extends Application {
         }
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("authentification.fxml"));
         fxmlLoader.setControllerFactory(obj -> new authentification(s));
-        Scene scene = new Scene(fxmlLoader.load());
+        Screen screen = Screen.getPrimary();
+        Scene scene = new Scene(fxmlLoader.load(),screen.getBounds().getWidth(),screen.getBounds().getHeight());
         stage.setTitle("My Desktop Planner");
         stage.setScene(scene);
+        stage.setFullScreen(true);
         stage.show();
     }
 

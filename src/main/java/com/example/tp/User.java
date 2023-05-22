@@ -1,6 +1,8 @@
 package com.example.tp;
 
 import org.mindrot.jbcrypt.BCrypt;
+
+import java.time.Duration;
 import java.util.Map;
 
 import java.io.*;
@@ -17,6 +19,7 @@ public class User implements Serializable {
    private List<Taches> UnsheduledTaches = new ArrayList<>();
    private List<Calendrier> calendriers;
    private Map<Badge,Integer> badges;
+   private Duration MinCreneau;
 
  //  private Historique histo ;
    static private int minTaskDaily ;
@@ -96,7 +99,15 @@ public class User implements Serializable {
         this.planningList.add(planning);
         return planning;
     }
-
+    public Planning PlanningActuelle(Taches tache){
+       int i=0;
+       for (Planning plan : planningList){
+           if (this.planningList.get(i).getTacheList().contains(tache)) {
+               return plan;
+           }
+       }
+        return null;
+    }
     public void setCalendar(Calendrier calendar) {
     }
     public  void addTache(Taches newTache){
@@ -166,6 +177,7 @@ public class User implements Serializable {
         this.planningList= Utilisateur.getPlanningList();
         this.UnsheduledTaches= Utilisateur.getUnsheduledTaches();
         this.minTaskDaily=Utilisateur.getMinTaskDaily();
+        this.MinCreneau=Utilisateur.getMinCreneau();
         filein.close();
         in.close();
     }
@@ -195,5 +207,13 @@ public class User implements Serializable {
 
     public void setEncouragement(Encouragement encouragement) {
         this.encouragement = encouragement;
+    }
+
+    public Duration getMinCreneau() {
+        return MinCreneau;
+    }
+
+    public void setMinCreneau(Duration minCreneau) {
+        MinCreneau = minCreneau;
     }
 }

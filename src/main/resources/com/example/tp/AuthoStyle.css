@@ -1,0 +1,22 @@
+.text-field {
+    -fx-background-color: transparent;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: #ccc;
+    -fx-padding: 5px;
+}
+.label{
+    -fx-font-family: "Calibri";
+    -fx-text-fill:#23574B;
+}
+.text-field .text {
+    -fx-opacity: 0.8;
+}
+.button {
+    -fx-text-fill:white;
+    -fx-background-color: #3F9984;
+    -fx-font-family: "Calibri";
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-font-weight:bold;
+}

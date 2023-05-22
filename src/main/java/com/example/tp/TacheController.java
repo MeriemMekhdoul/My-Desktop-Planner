@@ -9,9 +9,13 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
+import javafx.util.converter.LocalTimeStringConverter;
 
 import java.net.URL;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -49,24 +53,34 @@ public class TacheController implements Initializable {
     private ComboBox<Etat> etat;
     @FXML
     private Button Valider;
+    private Planning planning;
 
     private List<Taches> listeTache;
     public TacheController(Taches t){
         this.tache=t;
     }
+    public TacheController(Planning planning){
+        this.planning=planning;
+    }
+
     public TacheController(){}
 
     @FXML
     private void handleSaveButton() {
         boolean isBlocked = bloquee.isSelected();
+        StringConverter<LocalTime> converter = new LocalTimeStringConverter();
+        String durationText = Duree.getText();
+        LocalTime localTime = converter.fromString(durationText);
+        Categorie catg = categorie.getValue();
+        Priorite prio = priorite.getValue();
+        Etat etat1 = etat.getValue();
+        LocalDate selectedDate = deadline.getValue();
         if (tache==null) {
             // Check the state of the checkboxes
             boolean isSimple = simple.isSelected();
             boolean isDecomposable = decomposable.isSelected();
-            Categorie catg = categorie.getValue();
-            Priorite prio = priorite.getValue();
-            Etat etat1 = etat.getValue();
-            LocalDate selectedDate = deadline.getValue();
+
+
             if (isSimple && !isDecomposable) {
                 Taches tacheSimple = new TacheSimple();
                 if (selectedDate != null) {
@@ -79,7 +93,15 @@ public class TacheController implements Initializable {
                     error.setStyle("-fx-text-fill:red;");
                 }
                 else{
-                    tacheSimple.setDuree(Duree.getText());
+                    if (localTime != null) {
+                        LocalTime referenceTime = LocalTime.MIDNIGHT;
+                        Duration duration = Duration.between(referenceTime, localTime);
+                        tacheSimple.setDuree(duration);
+                    } else {
+                        // Invalid input, handle accordingly
+                        System.out.println("Invalid duration input");
+                    }
+
                 }
                 tacheSimple.setName(NomTache.getText());
                 tacheSimple.setCategorie(catg);
@@ -87,7 +109,9 @@ public class TacheController implements Initializable {
                 tacheSimple.setEtat(etat1);
                 tacheSimple.creneau.setBloque(isBlocked);
                 user.addTache(tacheSimple);
-                listeTache.add(tacheSimple);
+                listeTache.add(tacheSimple);/** est ce que ns7a9ha???**/
+                if (planning!= null)
+                {planning.addtache(tacheSimple); }
             } else if (!isSimple && isDecomposable) {
                 Taches tacheDecomposee = new TacheDecomposee();
                 if (selectedDate != null) {
@@ -104,7 +128,15 @@ public class TacheController implements Initializable {
 
                 }
                 else{
-                tacheDecomposee.setDuree(Duree.getText());
+                    if (localTime != null) {
+                        LocalTime referenceTime = LocalTime.MIDNIGHT;
+                        Duration duration = Duration.between(referenceTime, localTime);
+                        tacheDecomposee.setDuree(duration);
+                    } else {
+                        // Invalid input, handle accordingly
+                        System.out.println("Invalid duration input");
+                    }
+
                 System.out.println(tacheDecomposee.getDuree());
                 }
                 System.out.println(Duree.getText());
@@ -114,9 +146,10 @@ public class TacheController implements Initializable {
                 tacheDecomposee.setEtat(etat1);
                 System.out.println(tacheDecomposee.getEtat());
                 tacheDecomposee.creneau.setBloque(isBlocked);
-
                 user.addTache(tacheDecomposee);
                 listeTache.add(tacheDecomposee);
+                if (planning!= null)
+                {planning.addtache(tacheDecomposee); }
             } else {
                 Label error = new Label("vous devez choisir un type pour votre tache");
                 Vbox.getChildren().add(5, error);
@@ -127,11 +160,17 @@ public class TacheController implements Initializable {
             // Modifying an existing task
             // Update the task's attributes based on user input
             tache.setName(NomTache.getText());
-            tache.setDuree(Duree.getText());
+            if (localTime != null) {
+                LocalTime referenceTime = LocalTime.MIDNIGHT;
+                Duration duration = Duration.between(referenceTime, localTime);
+                tache.setDuree(duration);
+            } else {
+                // Invalid input, handle accordingly
+                System.out.println("Invalid duration input");
+            }
             tache.setCategorie(categorie.getValue());
             tache.setPriorite(priorite.getValue());
             tache.setEtat(etat.getValue());
-            LocalDate selectedDate = deadline.getValue();
             if (selectedDate != null) {
                 tache.setDeadline(selectedDate);
             }
@@ -153,9 +192,12 @@ public class TacheController implements Initializable {
         ObservableList<Categorie> categoryList = FXCollections.observableArrayList(catego);
         // Set the items of the ComboBox to the categoryList
         categorie.setItems(categoryList);
+
         if (tache!=null){
             NomTache.setText(tache.getName());
-            Duree.setText(tache.duree);
+            Duration duration = tache.getDuree(); // Example duration of 2 hours
+            String durationText = duration.toString();
+            Duree.setText(durationText);
             priorite.setValue(tache.getPriorite());
             etat.setValue(tache.getEtat());
             categorie.setValue(tache.getCategorie());
@@ -217,7 +259,6 @@ public class TacheController implements Initializable {
     public void AjouterUneSeulTache(){
         NvTache.setVisible(false);
         BloqueHbox.setVisible(false);
-        Réinitialiser();
         Valider.setOnAction(event ->{
             handleSaveButton() ;
             /**ici faire la redirection vers le module qui genere auto une tache**/
