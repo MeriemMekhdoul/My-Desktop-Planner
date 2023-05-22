@@ -5,7 +5,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="250.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.JourneeController">
    <children>
       <Label fx:id="date" text="Jour 17" VBox.vgrow="ALWAYS">
@@ -13,7 +12,7 @@
             <Font name="Calibri" size="26.0" />
          </font>
       </Label>
-      <VBox fx:id="creneaucontainer" alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
+      <VBox fx:id="creneaucontainer" alignment="TOP_CENTER" style="-fx-background-color: pink;" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets top="10.0" />
          </VBox.margin>

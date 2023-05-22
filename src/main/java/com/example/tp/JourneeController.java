@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class JourneeController extends Node {
+public class JourneeController extends VBox {
 
     @FXML
     private VBox creneaucontainer;
@@ -20,12 +20,14 @@ public class JourneeController extends Node {
     @FXML
     private Label date;
 
-    public Label getDate() {
-        return date;
+    public String getDate() {
+        return this.date.getText();
     }
 
     public void setDate(LocalDate date) {
+        System.out.println("AVANT LE SETDATE CONTROLLER JOURNEE LOCAL GIVEN DATE = "+date.toString());
         this.date.setText(date.format(DateTimeFormatter.ofPattern("EEE")) + " " + date.getDayOfMonth());
+        System.out.println("SETDATE CONTROLLER JOURNEE DATE = "+this.date.getText());
     }
 
     public void setCreneau(Journee jour) {
@@ -35,7 +37,11 @@ public class JourneeController extends Node {
 
         listetemp.sort(Comparator.comparing(Creneau::getHeureDebut));
         String texteBouton = null;
+        if (listetemp.isEmpty())
+            System.out.println("LISTE CRENEAUX VIDE");
+
         for (Creneau creneau : listetemp) {
+            System.out.println("creneau i TEST TEST");
             if (jour.getCreneauxLibres().contains(creneau)) {
                 texteBouton = creneau.getHeureDebut().toString() + " - " + creneau.getHeureFin().toString();
                 Button boutonCreneau = new Button(texteBouton);
