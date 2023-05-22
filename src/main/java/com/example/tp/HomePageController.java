@@ -49,7 +49,13 @@ public class HomePageController implements Initializable {
                 throw new RuntimeException(e);
             }
         });
-
+        for (Taches t: user.getTacheList()){
+            System.out.println("name="+t.getName());
+            System.out.println("Etat="+t.getEtat());
+            System.out.println("Duree="+t.getDuree());
+            System.out.println("prio="+t.getPriorite());
+            System.out.println("deadline="+t.getDeadline());
+        }
         // Obtenir la date actuelle (mois et année)
         LocalDate currentDate = LocalDate.now();
         int numeroMois = currentDate.getMonthValue();
@@ -62,6 +68,8 @@ public class HomePageController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        Planning plan= new Planning();
+        plan.TrieListeTache(user.getTacheList());
     }
     public void Creetache(Boolean verifie) throws IOException {
         FXMLLoader fxmlLoader=new FXMLLoader(getClass().getResource("Tache.fxml"));
@@ -108,7 +116,7 @@ public class HomePageController implements Initializable {
 
         // Boucle pour parcourir toutes les journées du mois
         for (int i = 1; i <= journees.size(); i++) {
-            System.out.println("journee"+i);
+          //  System.out.println("journee"+i);
             Journee journee = journees.get(i-1);
 
             // Crée une instance de JourneeController et appelle la méthode setJournee avec la journée correspondante
@@ -118,12 +126,10 @@ public class HomePageController implements Initializable {
             JourneeController journeeController = fxmlLoader.getController();
             //JourneeController journeeController = new JourneeController();
             journeeController.setDate(journee.getDate());
-            System.out.println("get date dans ................"+journeeController.getDate());
             journeeController.setCreneau(journee);
 
             // Ajoute la journée à la grille en respectant les critères de positionnement
             Button btn = new Button("test "+i);
-            System.out.println("journee.getDate().getDayOfWeek().getValue() = "+journee.getDate().getDayOfWeek().getValue());
             int colonne = journee.getDate().getDayOfWeek().getValue() % 7;
             int ligne = i / 7; // Calcule la ligne en fonction de l'indice de la journée dans le mois
 
