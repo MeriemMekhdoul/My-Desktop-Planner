@@ -1,5 +1,8 @@
 package com.example.tp;
 
-public interface Decomposable {
+import java.time.Duration;
+import java.util.List;
 
+public interface Decomposable {
+    List<?> decomposable(Taches tahce);
 }
