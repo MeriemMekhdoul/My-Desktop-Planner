@@ -123,7 +123,7 @@
                   <Button fx:id="annuler" alignment="CENTER" layoutX="318.0" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="27.0" prefWidth="89.0" text="Annuler" AnchorPane.bottomAnchor="10.0" />
                </children>
                <VBox.margin>
-                  <Insets bottom="15.0" />
+                  <Insets bottom="15.0" top="15.0" />
                </VBox.margin>
             </AnchorPane>
          </children>

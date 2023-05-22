@@ -29,6 +29,7 @@ public class Main extends Application {
         stage.setTitle("My Desktop Planner");
         stage.setScene(scene);
        // stage.setFullScreen(true);
+        //stage.setFullScreen(true);
         stage.show();
     }
 
