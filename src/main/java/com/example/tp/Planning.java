@@ -108,6 +108,11 @@ public class Planning implements Serializable {
                 Duration dureeCreneau= Duration.between(creneau.getHeureDebut(),creneau.getHeureFin());
                 if (tache.getDuree().compareTo(dureeCreneau)<=0){
                     System.out.println("creneau trouver"+creneau+"      "+jour.getDate());
+                    for (Creneau c:creneau.decomposable(tache)) {
+                        jour.addCreneauLibre(c);
+                    }
+                    jour.addCreneauPris(creneau);
+                    jour.addtache(tache);
                     return creneau;
                 }
             }

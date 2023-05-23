@@ -13,7 +13,6 @@ public class Creneau implements Serializable,Decomposable {
     private LocalTime HeureFin;
     private Boolean bloque = false;
     private static Duration dureeMIN;
-    private User user;
 
     public Creneau() {
     }
@@ -76,6 +75,7 @@ public class Creneau implements Serializable,Decomposable {
         LocalTime heureDebut = tache.creneau.getHeureDebut();
         LocalTime heureFin = tache.creneau.getHeureFin();
         List<Creneau> Listcreneaux = new ArrayList<>();
+        User user= UserManager.getUser();
         Duration min = user.getMinCreneau();
         if (((heureDebut.compareTo(this.HeureDebut) == 0) || (heureDebut.minus(min).compareTo(this.HeureDebut) == 0)) && (heureFin.plus(min).compareTo(this.HeureFin) < 0)) {
             Creneau creneau = new Creneau();

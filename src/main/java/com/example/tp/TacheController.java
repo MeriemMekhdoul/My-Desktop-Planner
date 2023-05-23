@@ -312,7 +312,7 @@ public class TacheController implements Initializable {
                 if (jour!=null)
                     jour.addtache(t);// ajouter dans la liste de tache de la journee
                 if (planning!= null)
-                {planning.addtache(t);
+                {   planning.addtache(t);
                     System.out.println("Le planning est non null"+planning.getDateDebut());}// i don't know about this one
                 user.PlanningActuelle(tache).FindCreneauTacheSimple(tache);
 

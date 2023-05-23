@@ -119,7 +119,6 @@ public class HomePageController implements Initializable {
             newVbox.getChildren().addAll(ajouterManu, ajouterAuto);
             newVbox.setAlignment(Pos.TOP_CENTER);
             VboxFixe.getChildren().add(3, newVbox);
-
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Tache.fxml"));
             Parent root1 = fxmlLoader.load();
             TacheController tacheController = fxmlLoader.getController();
