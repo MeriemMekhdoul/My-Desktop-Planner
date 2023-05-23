@@ -28,7 +28,7 @@ public class Journee implements Serializable {
     public void addCreneauLibre(Creneau nvcreneau){
         this.creneauxLibres.add(nvcreneau);
     }
-    public void SuppCreneauLibre(Creneau creneau){
+    public void suppCreneauLibre(Creneau creneau){
         this.creneauxLibres.remove(creneau);
     }
     public void addCreneauPris(Creneau nvcreneau){
@@ -83,6 +83,13 @@ public class Journee implements Serializable {
 
     public void setNbrTacheCompletedToday(int nbrTacheCompletedToday) {
         NbrTacheCompletedToday = nbrTacheCompletedToday;
+    }
+    public Taches getTache(Creneau creneau){
+        for (Taches tache: this.tacheList) {
+            if (tache.getCreneau().equals(creneau))
+                return tache;
+        }
+        return null;
     }
 
 }

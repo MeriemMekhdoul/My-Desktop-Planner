@@ -17,8 +17,8 @@
 
 /* Classe CSS pour un créneau libre */
 .creneaulibre {
-    -fx-background-color: #E2E2E2; /* Couleur de fond */
-    -fx-text-fill: #333333; /* Couleur du texte */
+    -fx-background-color: white; /* Couleur de fond */
+    -fx-text-fill: black; /* Couleur du texte */
     -fx-font-size: 14px; /* Taille de la police */
     -fx-font-weight: bold; /* Gras */
     -fx-padding: 5px 10px; /* Espacement intérieur */
@@ -26,8 +26,8 @@
 
 /* Classe CSS pour un créneau pris */
 .creneaupris {
-    -fx-background-color: #FFCDD2; /* Couleur de fond */
-    -fx-text-fill: #333333; /* Couleur du texte */
+    -fx-background-color: red; /* Couleur de fond */
+    -fx-text-fill: black; /* Couleur du texte */
     -fx-font-size: 14px; /* Taille de la police */
     -fx-font-weight: bold; /* Gras */
     -fx-padding: 5px 10px; /* Espacement intérieur */

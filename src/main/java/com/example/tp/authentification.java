@@ -88,6 +88,7 @@ public class authentification implements Initializable {
             if (file.exists()){
                 user.LoadUtilisateur();
             }
+
             FXMLLoader fxmlLoader=new FXMLLoader(getClass().getResource("HomePage.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = (Stage) SeConnecter.getScene().getWindow();

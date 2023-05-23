@@ -23,8 +23,8 @@
             <Button fx:id="SetTache" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="37.0" prefWidth="127.0" text="Ajouter set de taches" VBox.vgrow="ALWAYS" />
             <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#CreerCreneau" prefHeight="37.0" text="nouveau creneau" VBox.vgrow="ALWAYS" />
             <Pane prefHeight="54.0" prefWidth="127.0" />
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="37.0" text="Mes Taches" VBox.vgrow="ALWAYS" />
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="37.0" text="Unshecheduled" VBox.vgrow="ALWAYS" />
+            <Button fx:id="MesTaches" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="37.0" text="Mes Taches" VBox.vgrow="ALWAYS" />
+            <Button fx:id="Unshecheduled" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="37.0" text="Unshecheduled" VBox.vgrow="ALWAYS" />
             <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="37.0" text="Mes plannings" VBox.vgrow="ALWAYS" />
          </children>
          <BorderPane.margin>

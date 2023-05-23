@@ -67,8 +67,8 @@ public class Creneau implements Serializable,Decomposable {
 
     public String afficherCreneau() {
         return "Heure de début : " + HeureDebut +
-                "\nHeure de fin : " + HeureFin +
-                "\nBloqué : " + bloque;
+                "\nHeure de fin : " + HeureFin ;
+               // "\nBloqué : " + bloque;
     }
 
     @Override

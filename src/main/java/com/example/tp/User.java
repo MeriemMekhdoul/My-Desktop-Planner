@@ -3,6 +3,7 @@ package com.example.tp;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.Map;
 
 import java.io.*;
@@ -93,10 +94,21 @@ public class User implements Serializable {
     public Planning PlanningActuelle(Taches tache){
        int i=0;
        for (Planning plan : planningList){
+           System.out.println("je suis entrain de chercher mon planning actuelle");
            if (this.planningList.get(i).getTacheList().contains(tache)) {
                return plan;
            }
+           i++;
        }
+       return  null;
+   }
+        public Planning PlanningActuelleJour(LocalDate jour ){
+
+            for (Planning plan : planningList){
+                if ((jour.isAfter(plan.getDateDebut())|| jour.equals(plan.getDateDebut())) && (jour.isBefore(plan.getDateFin()) || jour.equals(plan.getDateFin()))){
+                    return  plan;
+                }
+            }
         return null;
     }
     public void setCalendar(Calendrier calendar) {
@@ -167,7 +179,8 @@ public class User implements Serializable {
         this.categorie=Utilisateur.getCategorie();
         this.planningList= Utilisateur.getPlanningList();
         this.UnsheduledTaches= Utilisateur.getUnsheduledTaches();
-        minTaskDaily=Utilisateur.getMinTaskDaily();
+        this.minTaskDaily=Utilisateur.getMinTaskDaily();
+        this.calendriers=Utilisateur.getCalendriers();
         this.MinCreneau=Utilisateur.getMinCreneau();
         filein.close();
         in.close();

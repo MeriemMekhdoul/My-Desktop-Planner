@@ -16,9 +16,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="521.0" prefWidth="529.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.TacheController">
+<AnchorPane stylesheets="@styles.css" prefHeight="521.0" prefWidth="529.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.TacheController">
    <children>
-      <VBox fx:id="Vbox" layoutX="67.0" layoutY="82.0" prefHeight="375.0" prefWidth="388.0" spacing="15.0" AnchorPane.bottomAnchor="82.0">
+      <VBox fx:id="Vbox" layoutX="67.0" layoutY="67.66666666666669" prefHeight="375.0" prefWidth="388.0" spacing="15.0" AnchorPane.topAnchor="67.66666666666669">
          <children>
             <TextField fx:id="NomTache" prefHeight="25.0" prefWidth="210.0" styleClass="tous" text="Nom tache" />
             <HBox alignment="CENTER_LEFT" prefHeight="29.0" prefWidth="100.0" spacing="32.0">
@@ -110,7 +110,7 @@
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
          </padding>
       </VBox>
-      <Label layoutX="20.0" layoutY="23.0" style="-fx-text-fill: #3F9984; -fx-font-weight: bold;" text="Créer une nouvelle tache:">
+      <Label fx:id="label" layoutX="20.0" layoutY="23.0" style="-fx-text-fill: #3F9984; -fx-font-weight: bold;" text="Créer une nouvelle tache:">
          <font>
             <Font size="24.0" />
          </font>

@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -42,11 +43,21 @@ public class FirstUtilisation implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         user=UserManager.getUser();
-        AjoutTache.setOnAction(event -> {
-            VBox newVbox= new VBox();
+
+
+
+    }
+    @FXML
+    private HBox HboxTache;
+    @FXML
+    public void AjoutTache(){
+            HBox hbox= new HBox(10);
             Button ajouterManu = new Button("Manuellement");
             Button ajouterAuto = new Button("Automatiquement");
-            Hbox.getChildren().addAll(ajouterManu,ajouterAuto);
+            hbox.getChildren().addAll(ajouterManu,ajouterAuto);
+            HboxTache.setSpacing(22);
+            HboxTache.getChildren().remove(AjoutTache);
+            HboxTache.getChildren().add(hbox);
             ajouterAuto.setOnAction(event1 -> {
                 try {
                     CreeTache();
@@ -54,37 +65,69 @@ public class FirstUtilisation implements Initializable {
                     throw new RuntimeException(e);
                 }
             });
-        });
-
-
-
     }
     @FXML
-    public void Terminer(){
-        StringConverter<LocalTime> converter = new LocalTimeStringConverter();
-        String durationText = MinCreneau.getText();
-        LocalTime localTime = converter.fromString(durationText);
-        if (localTime != null) {
-            LocalTime referenceTime = LocalTime.MIDNIGHT;
-            Duration duration = Duration.between(referenceTime, localTime);
-            user.setMinCreneau(duration);
-            // Use the duration as needed
-            System.out.println("Duration: " + duration);
-        } else {
-            // Invalid input, handle accordingly
-            System.out.println("Invalid duration input");
+    private VBox Vbox;
+    @FXML
+    public void Terminer() {
+        try {
+            StringConverter<LocalTime> converter = new LocalTimeStringConverter();
+            String durationText = MinCreneau.getText();
+            LocalTime localTime = converter.fromString(durationText);
+            if (localTime != null) {
+                LocalTime referenceTime = LocalTime.MIDNIGHT;
+                Duration duration = Duration.between(referenceTime, localTime);
+                if (duration.toMinutes() <= 0) {
+                    throw new IllegalArgumentException("La durée minimale doit être supérieure à zéro.");
+                }
+                user.setMinCreneau(duration);
+                // Use the duration as needed
+                System.out.println("Duration: " + duration);
+            } else {
+                throw new IllegalArgumentException("Invalid duration input");
+            }
+
+            LocalDate dateF = DF.getValue();
+            LocalDate dateD = DD.getValue();
+            LocalDate currentDate = LocalDate.now();
+
+            if (dateD == null) {
+                dateD = currentDate;
+            }
+
+            if (dateD.isBefore(currentDate)) {
+                throw new IllegalArgumentException("La date de début doit être supérieure ou égale à la date d'aujourd'hui.");
+            }
+
+            if (dateF == null) {
+                throw new IllegalArgumentException("Vous devez sélectionner une date de fin.");
+            }
+
+            if (dateF.isBefore(dateD)) {
+                throw new IllegalArgumentException("La date de fin doit être postérieure à la date de début.");
+            }
+
+            user.newPlanning(new Planning(dateD, dateF));
+
+            if (MinTache.getText().isEmpty()) {
+                user.setMinTaskDaily(2);
+            } else {
+                user.setMinTaskDaily(Integer.parseInt(MinTache.getText()));
+            }
+
+            Stage stage = (Stage) DF.getScene().getWindow();
+            stage.close();
+
+            System.out.println(user.getMinCreneau() + " " + user.getMinTaskDaily());
+
+            /**ici remplir dans le calendrier de home page**/
+        } catch (IllegalArgumentException e) {
+            // Handle the exception here
+            showError(e.getMessage(),1);
         }
-        if (!MinTache.getText().isEmpty()){
-        user.setMinTaskDaily(Integer.parseInt(MinTache.getText()));}
-        LocalDate dateF= DF.getValue();
-        LocalDate dateD= DD.getValue();
-        Planning plan= new Planning(dateD,dateF);
-        user.newPlanning(plan);
-        Stage stage = (Stage) DF.getScene().getWindow();
-        stage.close();
-        System.out.println(user.getMinCreneau()+"       "+user.getMinTaskDaily());
-        /**ici remplir dans le calendrier de home page**/
     }
+
+
     @FXML
     public void CreeCreneau() throws IOException {
         FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("CreerCreneau.fxml"));
@@ -106,5 +149,20 @@ public class FirstUtilisation implements Initializable {
         tacheController.NvSetTaches();
         /**fermer la page de first utilisation?**/
     }
+    private void showError(String message,int i) {
+        // Remove any previous error messages
+        clearErrorMessages();
 
+        // Display the error message in red above the elements
+        Label errorLabel = new Label(message);
+        errorLabel.setStyle("-fx-text-fill: red;");
+        Vbox.getChildren().add(i, errorLabel);
+    }
+
+
+
+    private void clearErrorMessages() {
+        // Remove any previous error messages from the VBox
+        Vbox.getChildren().removeIf(node -> node instanceof Label && ((Label) node).getStyle().equals("-fx-text-fill: red;"));
+    }
 }

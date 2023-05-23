@@ -10,10 +10,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="642.0" prefWidth="924.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.FirstUtilisation">
+<AnchorPane prefHeight="642.0" prefWidth="924.0" stylesheets="@FirstUseStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.FirstUtilisation">
    <children>
-      <VBox alignment="TOP_CENTER" layoutX="23.0" layoutY="82.0" prefHeight="500.0" prefWidth="878.0" spacing="12.0" AnchorPane.leftAnchor="23.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="82.0">
+      <VBox fx:id="Vbox" alignment="TOP_CENTER" layoutX="23.0" layoutY="82.0" prefHeight="515.0" prefWidth="878.0" spacing="12.0" AnchorPane.leftAnchor="23.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="82.0">
          <children>
             <Label prefHeight="57.0" prefWidth="813.0" text="Pour commencer,créez votre premier planning en définissant la date de début et de fin. Par exemple, créer un planning de révision s'étendant du 12 mai au 1er juin. Vous pouvez ajouter des tâches et/ou cree des créneaux de travaille dans votre planning,Vous avez la possibilité de l'ajuster et de le modifier  ultérieurement selon vos besoins." textAlignment="CENTER" wrapText="true">
                <font>
@@ -60,7 +59,7 @@
                   <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
                </padding>
                <children>
-                  <Label text="Entrez le nombre minimale de tache que vous voules realiser par jour: ">
+                  <Label text="Entrez le nombre minimale de tache que vous voules realisez par jour: ">
                      <font>
                         <Font size="13.0" />
                      </font>
@@ -71,7 +70,7 @@
                   <Insets left="50.0" />
                </VBox.margin>
             </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="41.0" prefWidth="631.0" spacing="170.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="41.0" prefWidth="631.0" spacing="44.0">
                <padding>
                   <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
                </padding>
@@ -81,13 +80,14 @@
                         <Font size="13.0" />
                      </font>
                   </Label>
+                  <Label opacity="0.5" text="Format:  hh:mm" />
                   <TextField fx:id="MinCreneau" styleClass="InfoField" />
                </children>
                <VBox.margin>
                   <Insets left="50.0" />
                </VBox.margin>
             </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="41.0" prefWidth="631.0" spacing="168.0">
+            <HBox fx:id="HboxTache" alignment="CENTER_LEFT" prefHeight="41.0" prefWidth="631.0" spacing="168.0">
                <padding>
                   <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
                </padding>
@@ -97,7 +97,7 @@
                         <Font size="13.0" />
                      </font>
                   </Label>
-                  <Button fx:id="AjoutTache" mnemonicParsing="false" prefHeight="32.0" prefWidth="141.0" text="Ajouter des taches" />
+                  <Button fx:id="AjoutTache" mnemonicParsing="false" onAction="#AjoutTache" prefHeight="32.0" prefWidth="141.0" text="Ajouter des taches" />
                </children>
                <VBox.margin>
                   <Insets left="50.0" />

@@ -1,8 +1,10 @@
 package com.example.tp;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.Duration;
+import java.time.Year;
 import java.util.*;
+import java.time.LocalDate;
 
 public class Planning implements Serializable {
     private LocalDate dateDebut;
@@ -72,29 +74,49 @@ public class Planning implements Serializable {
             } else {
                 lowPriorityTasks.add(tache);
             }
-        }
+        }System.out.println("Med");
         for (Taches t: mediumPriorityTasks){
-            System.out.println("Med");
+
             System.out.println("Etat="+t.getEtat());
             System.out.println("Duree="+t.getDuree());
             System.out.println("prio="+t.getPriorite());
             System.out.println("deadline="+t.getDeadline());
-        }
+        }System.out.println("LOW");
         for (Taches t: lowPriorityTasks){
-            System.out.println("LOW");
+
             System.out.println("name="+t.getName());
             System.out.println("Etat="+t.getEtat());
             System.out.println("Duree="+t.getDuree());
             System.out.println("prio="+t.getPriorite());
             System.out.println("deadline="+t.getDeadline());
-        }
+        }System.out.println("Hight");
         for (Taches t: highPriorityTasks){
-            System.out.println("Hight");
+
             System.out.println("Etat="+t.getEtat());
             System.out.println("Duree="+t.getDuree());
             System.out.println("prio="+t.getPriorite());
             System.out.println("deadline="+t.getDeadline());
         }
+    }
+    public  Creneau FindCreneauTacheSimple(Taches tache){
+        LocalDate date= LocalDate.now();
+        User user = UserManager.getUser();
+        boolean trouver=false;
+        while (!date.equals(dateFin)) {
+            Journee jour = user.getCalendar(date.getYear()).getJournee(date);
+            for (Creneau creneau: jour.getCreneauxLibres()){
+                Duration dureeCreneau= Duration.between(creneau.getHeureDebut(),creneau.getHeureFin());
+                if (tache.getDuree().compareTo(dureeCreneau)<=0){
+                    System.out.println("creneau trouver"+creneau+"      "+jour.getDate());
+                    return creneau;
+                }
+            }
+            date=date.plusDays(1);
+        }
+            System.out.println("aucun creneau libre pour ajouter cette tache");/** le mettre en pop up**/
+            user.getUnsheduledTaches().add(tache);// je supprime de la liste des taches??
+           // user.getTacheList().remove(tache);
+        return null;
     }
 
 }

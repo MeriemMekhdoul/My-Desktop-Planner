@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.authentification">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1050.0" stylesheets="@AuthoStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.authentification">
    <children>
       <HBox prefHeight="655.0" prefWidth="1049.0" AnchorPane.bottomAnchor="-5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -34,13 +34,13 @@
                                  <font>
                                     <Font size="13.0" />
                                  </font></Label>
-                              <TextField fx:id="UserName" text="Entez votre pseudo" />
+                              <TextField fx:id="UserName" text="Enterz votre pseudo" />
                               <Label text="Mot de passe">
                                  <font>
                                     <Font size="13.0" />
                                  </font></Label>
                               <PasswordField fx:id="MoPass" />
-                              <Button fx:id="inscriptionButton" mnemonicParsing="false" onAction="#handleRegisterButton" prefHeight="22.0" prefWidth="275.0" style="-fx-background-color: transparent; -fx-text-fill: #007FEF;" text="Vous avez pas de compte? inscrivez vous !" underline="true">
+                              <Button fx:id="inscriptionButton" mnemonicParsing="false" onAction="#handleRegisterButton" prefHeight="22.0" prefWidth="275.0" style="-fx-background-color: transparent; -fx-text-fill: #007FEF;" text="Vous n'avez pas de compte? inscrivez-vous !" underline="true">
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>

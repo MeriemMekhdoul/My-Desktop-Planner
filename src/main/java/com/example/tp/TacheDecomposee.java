@@ -2,10 +2,9 @@ package com.example.tp;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.util.*;
 
 public class TacheDecomposee extends Taches  {
 
@@ -19,7 +18,41 @@ public class TacheDecomposee extends Taches  {
     public void setSimple(List<TacheSimple> simple) {
         Simple = simple;
     }
-
+    public   List<Creneau>  DecmposerTache (Journee jour, Planning plan){
+        User user = UserManager.getUser();
+        Creneau creneau1= plan.FindCreneauTacheSimple(this);
+        LocalDate date = jour.getDate() ;
+        Duration duree = this.duree;
+        List<Creneau> listeCreneau= new ArrayList<>();
+        int i=1;
+        if (creneau1== null) {
+            while (!date.equals(plan.getDateFin())|| duree.isZero()){
+                for(Creneau cr: jour.getCreneauxLibres() ){
+                    Duration dureeCreneau= Duration.between(creneau.getHeureDebut(),creneau.getHeureFin());
+                    Taches tache= new TacheSimple();
+                    tache=this;
+                    tache.setDuree(duree.minus(dureeCreneau));
+                    tache.setName(this.getName()+i);
+                    i++;
+                    Simple.add((TacheSimple) tache);
+                    jour.addCreneauPris(cr);
+                    jour.suppCreneauLibre(cr);
+                    listeCreneau.add(cr);
+                    duree= duree.minus(dureeCreneau);
+                    if (duree.isZero()){
+                        return listeCreneau;
+                    }
+                }
+            }
+            System.out.println("la tache was not programmed ");
+            user.getUnsheduledTaches().add(this);
+            return null ;
+        }else{
+            listeCreneau.add(creneau1);
+            System.out.println("la tache peut se programmer dans un seul creneau");
+            return listeCreneau;
+        }
+    }
 }
        /* @Override
         public int size() {

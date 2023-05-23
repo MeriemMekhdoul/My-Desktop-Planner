@@ -8,10 +8,13 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 
@@ -100,38 +103,59 @@ public class HomePageController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Planning plan= new Planning();
-        plan.TrieListeTache(user.getTacheList());
+       // plan.TrieListeTache(user.getTacheList());
+        MesTaches.setOnAction(event -> VoirTache(user.getTacheList()));
+        Unshecheduled.setOnAction(event -> VoirTache(user.getUnsheduledTaches()));
+
+
     }
-    public void Creetache(Boolean verifie) throws IOException {
-        FXMLLoader fxmlLoader=new FXMLLoader(getClass().getResource("Tache.fxml"));
-        Parent root1 = fxmlLoader.load();
-        TacheController tacheController= fxmlLoader.getController();
-        if(verifie){
-        VBox newVbox= new VBox();
-        Button ajouterManu = new Button("Manuellement");
-        Button ajouterAuto = new Button("Automatiquement");
-        newVbox.getChildren().addAll(ajouterManu,ajouterAuto);
-        newVbox.setAlignment(Pos.TOP_CENTER);
-        VboxFixe.getChildren().add(3,newVbox);
+   public void Creetache(Boolean verifie) throws IOException {
+        if (verifie) {
+            VBox newVbox = new VBox(20);
+            Button ajouterManu = new Button("Manuellement");
+            ajouterManu.setMaxWidth(Double.MAX_VALUE);
+            Button ajouterAuto = new Button("Automatiquement");
+            ajouterAuto.setMaxWidth(Double.MAX_VALUE);
+            newVbox.getChildren().addAll(ajouterManu, ajouterAuto);
+            newVbox.setAlignment(Pos.TOP_CENTER);
+            VboxFixe.getChildren().add(3, newVbox);
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Tache.fxml"));
+            Parent root1 = fxmlLoader.load();
+            TacheController tacheController = fxmlLoader.getController();
+
             ajouterAuto.setOnAction(event -> {
                 Stage stage = new Stage();
-                stage.setScene(new Scene(root1));
-                stage.show();
-                tacheController.AjouterUneSeulTache();
+                try {
+                    FXMLLoader fxmlLoaderAuto = new FXMLLoader(getClass().getResource("Tache.fxml"));
+                    Parent rootAuto = fxmlLoaderAuto.load();
+                    TacheController tacheControllerAuto = fxmlLoaderAuto.getController();
+                    tacheControllerAuto.setPlanning(user.PlanningActuelleJour(LocalDate.now()));
+                    stage.setScene(new Scene(rootAuto));
+                    stage.show();
+                    tacheControllerAuto.AjouterUneSeulTache();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             });
 
-            ajouterManu.setOnAction(event -> System.out.println("Ajouter manuellement"));
-            /**  ici il faut lui ouvrir le calendrier et lui demander de choisir un des creneaux libre qui seront highlited then on ouvre le fxml Tache to fill the informations **/
-
-        }
-        else {
+            ajouterManu.setOnAction(event -> {
+                System.out.println("Ajouter manuellement");
+                openPopup();
+            });
+        } else {
             Stage stage = new Stage();
-            stage.setScene(new Scene(root1));
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Tache.fxml"));
+            Parent root2 = fxmlLoader.load();
+            TacheController tacheController = fxmlLoader.getController();
+
+            stage.setScene(new Scene(root2));
             stage.show();
             tacheController.NvSetTaches();
         }
     }
+
     public void VisualiserTache(Taches Tache) throws IOException {
         FXMLLoader fxmlLoader=new FXMLLoader(getClass().getResource("Tache.fxml"));
         fxmlLoader.setControllerFactory(obj -> new TacheController(Tache));
@@ -185,6 +209,37 @@ public class HomePageController implements Initializable {
             mois.add(jour,colonne ,ligne);
         }
     }
+    public void test(Creneau creneau, Journee jour, boolean vide) throws IOException {
+        if (vide){
+            Planning plan = user.PlanningActuelleJour(jour.getDate());
+            FXMLLoader fxmlLoader=new FXMLLoader(getClass().getResource("Tache.fxml"));
+            TacheController tacheController=new TacheController(creneau);
+            if (creneau!= null){
+                System.out.println(creneau.getDate());
+
+                System.out.println("_______________************__________");
+
+            fxmlLoader.setControllerFactory(obj -> tacheController);
+            }
+            tacheController.setPlanning(plan);
+            tacheController.setJour(jour);
+            Parent root1 = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root1));
+            stage.show();
+           tacheController.AjouterUneSeulTache();
+            jour.addCreneauPris(creneau);
+            jour.suppCreneauLibre(creneau);
+
+        }
+        else{
+            Taches tache = jour.getTache(creneau);
+            if (tache == null)
+                System.out.println("TACHE NULLE ://////////////////////////////");
+            else
+                VisualiserTache(tache);
+        }
+    }
 
     public void setCreneau(Journee jour, VBox creneaucontainer) {
         List<Creneau> listetemp = new ArrayList<>();
@@ -207,9 +262,21 @@ public class HomePageController implements Initializable {
                 creneaucontainer.getChildren().add(boutonCreneau);
                 boutonCreneau.setMaxWidth(Double.MAX_VALUE);
                 VBox.setVgrow(boutonCreneau,Priority.ALWAYS);
+                boutonCreneau.setOnAction(event -> {
+                    try {
+                        test(creneau,jour,true);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
             } else
             {   //c'est automatiquement un créneau pris
                 List<Taches> taches = jour.getTacheList();
+                System.out.println(taches.size());
+                for (Taches tache : taches) {
+                    System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+                   System.out.println(tache.getName());
+                }
                 for (Taches tache : taches) {
                     if (tache.getCreneau() == creneau) {
                         texteBouton = tache.getName();
@@ -222,7 +289,15 @@ public class HomePageController implements Initializable {
                 creneaucontainer.getChildren().add(boutonTache);
                 creneaucontainer.setStyle("-fx-background-color:pink;");
                 boutonTache.setMaxWidth(Double.MAX_VALUE);
+                boutonTache.setStyle("-fx-background-color:red;");
                 VBox.setVgrow(boutonTache,Priority.ALWAYS);
+                boutonTache.setOnAction(event -> {
+                    try {
+                        test(creneau,jour,false);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
             }
         }
     }
@@ -306,5 +381,69 @@ public class HomePageController implements Initializable {
         Stage stage = new Stage();
         stage.setScene(new Scene(root1));
         stage.show();
+    }
+    private void openPopup() {
+        // Create a new stage for the pop-up window
+        Stage popupStage = new Stage();
+
+        // Set the modality to APPLICATION_MODAL to block input events for other windows
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+
+        // Set the title of the pop-up window
+        popupStage.setTitle("Pop-up Window");
+
+        // Create a label to display a message in the pop-up window
+        Label label = new Label("Choisisez un creneau parmis ceux disponible sur votre calndrier");
+        label.setStyle("-fx-font-family: 'Calibri';" +
+                "-fx-text-fill: #23574B;"+ "-fx-font-size: 16px;");
+        label.setWrapText(true);
+        label.setTextAlignment(TextAlignment.CENTER);
+        // Create a button to close the pop-up window
+        Button continueButton = new Button("Continue");
+        continueButton.setStyle("-fx-text-fill: white;" +
+                "-fx-background-color: #3F9984;" +
+                "-fx-font-family: 'Calibri';" +
+                "-fx-background-radius: 5;" +
+                "-fx-border-radius: 5;" +
+                "-fx-font-weight: bold;"+
+                "-fx-font-size: 16px;");
+        continueButton.setPrefWidth(200);
+        continueButton.setPrefHeight(40);
+        continueButton.setOnAction(event -> popupStage.close());
+
+        // Create the layout for the pop-up window
+        VBox popupRoot = new VBox(20);
+        popupRoot.setAlignment(Pos.CENTER);
+        popupRoot.setPadding(new Insets(10));
+        popupRoot.getChildren().addAll(label, continueButton);
+
+        // Create the scene for the pop-up window
+        Scene popupScene = new Scene(popupRoot, 400, 150);
+        popupStage.setScene(popupScene);
+        popupStage.showAndWait();
+    }
+    @FXML
+    private Button Unshecheduled,MesTaches;
+    public void VoirTache(List<Taches> list){
+        mois.setVisible(false);
+        ScrollPane scrollPane=new ScrollPane();
+        VBox TacheContainer= new VBox(10);
+
+       // user.getTacheList(); Je dois sort mais en fonction de quoi ?? j'ai pas access au journees
+        for(Taches tache1 : list){
+            Button button =new Button();
+            button.setText(tache1.getName());
+            button.setAlignment(Pos.CENTER);
+            button.setTextAlignment(TextAlignment.CENTER);
+            TacheContainer.getChildren().add(button);
+            button.setOnAction(event -> {
+                try {
+                    VisualiserTache(tache1);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+            });
+    }scrollPane.setContent(TacheContainer);
     }
 }
