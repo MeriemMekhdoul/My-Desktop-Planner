@@ -18,16 +18,21 @@ public class TacheDecomposee extends Taches  {
     public void setSimple(List<TacheSimple> simple) {
         Simple = simple;
     }
-    public   List<Creneau>  DecmposerTache (Journee jour, Planning plan){
+    public   List<Creneau>  DecomposerTache (Journee jour, Planning plan){
         User user = UserManager.getUser();
         Creneau creneau1= plan.FindCreneauTacheSimple(this);
         LocalDate date = jour.getDate() ;
         Duration duree = this.duree;
         List<Creneau> listeCreneau= new ArrayList<>();
+        System.out.println(plan.getDateFin());
+        for(Creneau cr: jour.getCreneauxLibres() ){
+        System.out.println(cr.afficherCreneau());}
         int i=1;
-        if (creneau1== null) {
+        if (creneau1 == null) {
             while (!date.equals(plan.getDateFin())|| duree.isZero()){
+
                 for(Creneau cr: jour.getCreneauxLibres() ){
+                    System.out.println("je suis dans la boucle for");
                     Duration dureeCreneau= Duration.between(creneau.getHeureDebut(),creneau.getHeureFin());
                     Taches tache= new TacheSimple();
                     tache=this;
@@ -38,7 +43,9 @@ public class TacheDecomposee extends Taches  {
                     jour.addCreneauPris(cr);
                     jour.suppCreneauLibre(cr);
                     listeCreneau.add(cr);
+
                     duree= duree.minus(dureeCreneau);
+                    System.out.println(duree);
                     if (duree.isZero()){
                         return listeCreneau;
                     }
@@ -54,124 +61,3 @@ public class TacheDecomposee extends Taches  {
         }
     }
 }
-       /* @Override
-        public int size() {
-            return 0;
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return false;
-        }
-
-        @Override
-        public boolean contains(Object o) {
-            return false;
-        }
-
-        @NotNull
-        @Override
-        public Iterator<TacheSimple> iterator() {
-            return null;
-        }
-
-        @NotNull
-        @Override
-        public Object[] toArray() {
-            return new Object[0];
-        }
-
-        @NotNull
-        @Override
-        public <T> T[] toArray(@NotNull T[] a) {
-            return null;
-        }
-
-        @Override
-        public boolean add(TacheSimple tacheSimple) {
-            return false;
-        }
-
-        @Override
-        public boolean remove(Object o) {
-            return false;
-        }
-
-        @Override
-        public boolean containsAll(@NotNull Collection<?> c) {
-            return false;
-        }
-
-        @Override
-        public boolean addAll(@NotNull Collection<? extends TacheSimple> c) {
-            return false;
-        }
-
-        @Override
-        public boolean addAll(int index, @NotNull Collection<? extends TacheSimple> c) {
-            return false;
-        }
-
-        @Override
-        public boolean removeAll(@NotNull Collection<?> c) {
-            return false;
-        }
-
-        @Override
-        public boolean retainAll(@NotNull Collection<?> c) {
-            return false;
-        }
-
-        @Override
-        public void clear() {
-
-        }
-
-        @Override
-        public TacheSimple get(int index) {
-            return null;
-        }
-
-        @Override
-        public TacheSimple set(int index, TacheSimple element) {
-            return null;
-        }
-
-        @Override
-        public void add(int index, TacheSimple element) {
-
-        }
-
-        @Override
-        public TacheSimple remove(int index) {
-            return null;
-        }
-
-        @Override
-        public int indexOf(Object o) {
-            return 0;
-        }
-
-        @Override
-        public int lastIndexOf(Object o) {
-            return 0;
-        }
-
-        @NotNull
-        @Override
-        public ListIterator<TacheSimple> listIterator() {
-            return null;
-        }
-
-        @NotNull
-        @Override
-        public ListIterator<TacheSimple> listIterator(int index) {
-            return null;
-        }
-
-        @NotNull
-        @Override
-        public List<TacheSimple> subList(int fromIndex, int toIndex) {
-            return null;
-        }
-    };*/

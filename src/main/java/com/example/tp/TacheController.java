@@ -93,7 +93,13 @@ public class TacheController implements Initializable {
                     RemplirTache(tacheSimple);
                 } else if (!isSimple && isDecomposable) {
                     Taches tacheDecomposee = new TacheDecomposee();
+                    TacheDecomposee tacheDecomposeeObj = (TacheDecomposee) tacheDecomposee;
                     RemplirTache(tacheDecomposee);
+                    Journee j= user.getCalendar(2023).getJournee(LocalDate.now());
+                    for(Creneau creneau1 :tacheDecomposeeObj.DecomposerTache(j,planning)){
+                        System.out.println(creneau1.afficherCreneau());
+                    }
+
                 } else {
                     throw new HnadleException("Vous devez choisir un type pour votre tâche.");
                 }
@@ -309,12 +315,19 @@ public class TacheController implements Initializable {
                 this.tache=t;// maybe i'll need it
                 user.addTache(t);//ajouter dans la liste des taches du user
                 listeTache.add(t);/** est ce que ns7a9ha???**/
-                if (jour!=null)
+                if (jour!=null) {
                     jour.addtache(t);// ajouter dans la liste de tache de la journee
+                    for (Creneau c:creneau.decomposable(t)) {
+                        jour.addCreneauLibre(c);
+                        System.out.println("boucle liste creneau");
+                    }
+                    jour.suppCreneauLibre(creneau);
+                    jour.addCreneauPris(creneau);
+                }
                 if (planning!= null)
                 {   planning.addtache(t);
                     System.out.println("Le planning est non null"+planning.getDateDebut());}// i don't know about this one
-                user.PlanningActuelle(tache).FindCreneauTacheSimple(tache);
+               // user.PlanningActuelle(tache).FindCreneauTacheSimple(tache);
 
             }
         } catch (HnadleException e) {

@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -109,6 +110,21 @@ public class HomePageController implements Initializable {
 
 
     }
+    @FXML
+    public void actualiser(){
+        String moisAnnee = MoisAnnee.getText();
+        String[] parties = moisAnnee.split(" - ");
+
+        DateTimeFormatter moisAnneeFormatter = DateTimeFormatter.ofPattern("MMMM - yyyy");
+        YearMonth moisAnnee_ = YearMonth.parse(moisAnnee, moisAnneeFormatter);
+        int annee = Integer.parseInt(parties[1]);
+
+        try {
+            remplirGrille(user.getCalendar(annee).getMois(moisAnnee_.getMonthValue()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
    public void Creetache(Boolean verifie) throws IOException {
         if (verifie) {
             VBox newVbox = new VBox(20);
@@ -118,7 +134,7 @@ public class HomePageController implements Initializable {
             ajouterAuto.setMaxWidth(Double.MAX_VALUE);
             newVbox.getChildren().addAll(ajouterManu, ajouterAuto);
             newVbox.setAlignment(Pos.TOP_CENTER);
-            VboxFixe.getChildren().add(3, newVbox);
+            VboxFixe.getChildren().add(4, newVbox);
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Tache.fxml"));
             Parent root1 = fxmlLoader.load();
             TacheController tacheController = fxmlLoader.getController();
@@ -148,7 +164,7 @@ public class HomePageController implements Initializable {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Tache.fxml"));
             Parent root2 = fxmlLoader.load();
             TacheController tacheController = fxmlLoader.getController();
-
+            tacheController.setPlanning(user.PlanningActuelleJour(LocalDate.now()));
             stage.setScene(new Scene(root2));
             stage.show();
             tacheController.NvSetTaches();
@@ -181,8 +197,9 @@ public class HomePageController implements Initializable {
             jour.setPrefSize(250, 250);
             Label dateLabel = new Label(Integer.toString(journee.getDate().getDayOfMonth()));
             dateLabel.setFont(new Font("Calibri", 16));
-
+            ScrollPane scrollPane1= new ScrollPane();
             VBox creneaucontainer = new VBox();
+            scrollPane1.setContent(scrollPane1);
             creneaucontainer.setStyle("-fx-background-color:pink;");
             creneaucontainer.setSpacing(3);
             setCreneau(journee,creneaucontainer);
@@ -227,8 +244,6 @@ public class HomePageController implements Initializable {
             stage.setScene(new Scene(root1));
             stage.show();
            tacheController.AjouterUneSeulTache();
-            jour.addCreneauPris(creneau);
-            jour.suppCreneauLibre(creneau);
 
         }
         else{
@@ -423,9 +438,12 @@ public class HomePageController implements Initializable {
     }
     @FXML
     private Button Unshecheduled,MesTaches;
+    @FXML
+    private StackPane Stack;
+    ScrollPane scrollPane;
     public void VoirTache(List<Taches> list){
         mois.setVisible(false);
-        ScrollPane scrollPane=new ScrollPane();
+        scrollPane=new ScrollPane();
         VBox TacheContainer= new VBox(10);
 
        // user.getTacheList(); Je dois sort mais en fonction de quoi ?? j'ai pas access au journees
@@ -444,5 +462,12 @@ public class HomePageController implements Initializable {
 
             });
     }scrollPane.setContent(TacheContainer);
+        Stack.getChildren().add(scrollPane);
+    }
+    @FXML
+    public void RevenirCalendrier(){
+        mois.setVisible(true);
+        scrollPane.setVisible(false);
+
     }
 }

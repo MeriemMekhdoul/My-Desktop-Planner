@@ -11,12 +11,12 @@ public class Calendrier implements Serializable {
     public Calendrier(int annee) {   //constructeur
         this.annee = annee;
         this.mois = new ArrayList<>();
-        initialiserMois();
+        initialiserMois(annee);
     }
 
-    private void initialiserMois() {
+    private void initialiserMois(int annee) {
         for (int i = 1; i <= 12; i++) {
-            Mois mois = new Mois(i);
+            Mois mois = new Mois(i, annee);
             this.mois.add(mois);
         }
     }

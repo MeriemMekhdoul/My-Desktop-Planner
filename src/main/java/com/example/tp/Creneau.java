@@ -72,19 +72,19 @@ public class Creneau implements Serializable,Decomposable {
 
     @Override
     public List<Creneau> decomposable(Taches tache) {
-        LocalTime heureDebut = tache.creneau.getHeureDebut();
-        LocalTime heureFin = tache.creneau.getHeureFin();
+        LocalTime heureDebut = tache.getCreneau().getHeureDebut();
+        LocalTime heureFin = tache.getCreneau().getHeureFin();
         List<Creneau> Listcreneaux = new ArrayList<>();
         User user= UserManager.getUser();
         Duration min = user.getMinCreneau();
-        if (((heureDebut.compareTo(this.HeureDebut) == 0) || (heureDebut.minus(min).compareTo(this.HeureDebut) == 0)) && (heureFin.plus(min).compareTo(this.HeureFin) < 0)) {
+        if (((heureDebut.equals(this.HeureDebut)) || (heureDebut.minus(min).equals(this.HeureDebut))) && (heureFin.plus(min).isBefore(this.HeureFin))) {
             Creneau creneau = new Creneau();
-            creneau.setHeureDebut(heureDebut);
-            creneau.setHeureFin(heureFin);
+            creneau.setHeureDebut(heureFin);
+            creneau.setHeureFin(this.HeureFin);
             Listcreneaux.add(creneau);
-            this.HeureFin = heureFin;
+            this.HeureFin= heureFin;
         }
-        if ((heureDebut.minus(min).compareTo(this.HeureDebut) > 0) && ((heureFin.compareTo(this.HeureFin) == 0) || (heureFin.plus(min).compareTo(this.HeureFin) == 0))) {
+        if ((heureDebut.minus(min).isAfter(this.HeureDebut)) && ((heureFin.equals(this.HeureFin)) || (heureFin.plus(min).equals(this.HeureFin)))) {
             Creneau creneau = new Creneau();
             creneau.setHeureDebut(this.HeureDebut);
             creneau.setHeureFin(heureDebut);
@@ -97,7 +97,7 @@ public class Creneau implements Serializable,Decomposable {
             creneau.setHeureFin(heureDebut);
             Listcreneaux.add(creneau);
             Creneau creneau2 = new Creneau();
-            creneau2.setHeureDebut(HeureFin);
+            creneau2.setHeureDebut(heureFin);
             creneau2.setHeureFin(this.HeureFin);
             Listcreneaux.add(creneau2);
             this.HeureDebut = heureDebut;

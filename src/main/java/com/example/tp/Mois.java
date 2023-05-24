@@ -12,16 +12,17 @@ public class Mois implements Serializable {
     private final String nom;
     private List<Journee> journees;
 
-    public Mois(int numeroMois) {
+    public Mois(int numeroMois, int annee) {
         this.numeroMois = numeroMois;
         this.nom = obtenirNomMois(numeroMois);
         this.journees = new ArrayList<>();
-        initialiserJournees();
+        initialiserJournees(annee);
     }
 
-    private void initialiserJournees() {
+    private void initialiserJournees(int annee) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MONTH, numeroMois - 1);
+        calendar.set(Calendar.YEAR, annee);
         int nombreJours = getNombreJoursDansMois(numeroMois);
 
         for (int i = 1; i <= nombreJours; i++) {
