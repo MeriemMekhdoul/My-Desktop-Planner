@@ -59,25 +59,25 @@ public class Creneau implements Serializable,Decomposable {
     public LocalDate getDate() {
         return date;
     }
-
     public void setDate(LocalDate date) {
         this.date = date;
     }
 
     public String afficherCreneau() {
         return "Heure de début : " + HeureDebut +
-                "\nHeure de fin : " + HeureFin ;
-               // "\nBloqué : " + bloque;
+                "\nHeure de fin : " + HeureFin +
+                "\nBloqué : " + bloque;
     }
 
     @Override
     public List<Creneau> decomposable(Taches tache) {
-        LocalTime heureDebut = tache.getCreneau().getHeureDebut();
-        LocalTime heureFin = tache.getCreneau().getHeureFin();
-        List<Creneau> Listcreneaux = new ArrayList<>();
         User user= UserManager.getUser();
         Duration min = user.getMinCreneau();
+        LocalTime heureDebut = tache.getCreneau().getHeureDebut();
+        LocalTime heureFin = heureDebut.plus(tache.getDuree());
+        List<Creneau> Listcreneaux = new ArrayList<>();
         if (((heureDebut.equals(this.HeureDebut)) || (heureDebut.minus(min).equals(this.HeureDebut))) && (heureFin.plus(min).isBefore(this.HeureFin))) {
+            System.out.println("debut");
             Creneau creneau = new Creneau();
             creneau.setHeureDebut(heureFin);
             creneau.setHeureFin(this.HeureFin);
@@ -85,13 +85,15 @@ public class Creneau implements Serializable,Decomposable {
             this.HeureFin= heureFin;
         }
         if ((heureDebut.minus(min).isAfter(this.HeureDebut)) && ((heureFin.equals(this.HeureFin)) || (heureFin.plus(min).equals(this.HeureFin)))) {
+            System.out.println("FIN");
             Creneau creneau = new Creneau();
             creneau.setHeureDebut(this.HeureDebut);
             creneau.setHeureFin(heureDebut);
             Listcreneaux.add(creneau);
             this.HeureDebut = heureDebut;
         }
-        if ((heureDebut.minus(min).compareTo(this.HeureDebut) > 0) && (heureFin.plus(min).compareTo(this.HeureFin) < 0)) {
+        if ((heureDebut.minus(min).isAfter(this.HeureDebut)) && (heureFin.plus(min).isBefore(this.HeureFin))) {
+            System.out.println("MIDDLE");
             Creneau creneau = new Creneau();
             creneau.setHeureDebut(this.HeureDebut);
             creneau.setHeureFin(heureDebut);

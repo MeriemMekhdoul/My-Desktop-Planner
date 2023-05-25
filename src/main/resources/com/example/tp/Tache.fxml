@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane stylesheets="@styles.css" prefHeight="521.0" prefWidth="529.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.TacheController">
+<AnchorPane prefHeight="559.0" prefWidth="529.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.TacheController">
    <children>
       <VBox fx:id="Vbox" layoutX="67.0" layoutY="67.66666666666669" prefHeight="375.0" prefWidth="388.0" spacing="15.0" AnchorPane.topAnchor="67.66666666666669">
          <children>
@@ -62,7 +62,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <HBox alignment="CENTER" prefHeight="29.0" prefWidth="100.0" spacing="39.0">
+            <HBox fx:id="HboxRadioButton" alignment="CENTER" prefHeight="29.0" prefWidth="100.0" spacing="39.0">
                <children>
                   <RadioButton fx:id="decomposable" mnemonicParsing="false" text="Decomposable">
                      <toggleGroup>

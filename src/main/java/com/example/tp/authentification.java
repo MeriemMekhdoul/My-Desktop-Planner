@@ -34,6 +34,7 @@ public class authentification implements Initializable {
     @FXML
     private Label statusLabel;
 
+
     public void setSystem(com.example.tp.system system) {
         this.system1 = system;
     }
@@ -76,6 +77,8 @@ public class authentification implements Initializable {
         }
         boolean authenticated = system1.authenticate(username, password);
         if (authenticated) {
+            int numUser= system1.getI();
+            String num= Integer.toString(numUser);
             FileMyDestcktopPlanner DP= new FileMyDestcktopPlanner();
             statusLabel.setText("Authentication successful");
             system1.SaveListUsers();
@@ -84,10 +87,11 @@ public class authentification implements Initializable {
             user.setPseudo(username);
             user.setPassward(password);
             UserManager.setUser(user);
-            File file= new File(System.getProperty("user.home")+"\\MyDesktopPlanner\\UserInfo"+"\\User-info.bin");
+            File file= new File(System.getProperty("user.home")+"\\MyDesktopPlanner\\UserInfo\\User"+num+"-info.bin");
             if (file.exists()){
-                user.LoadUtilisateur();
+                user.LoadUtilisateur(num);
             }
+
 
             FXMLLoader fxmlLoader=new FXMLLoader(getClass().getResource("HomePage.fxml"));
             Parent root = fxmlLoader.load();
@@ -95,7 +99,7 @@ public class authentification implements Initializable {
             stage.setOnCloseRequest((WindowEvent e) -> {
                 System.out.println("Le bouton de fermeture a été cliqué !");
                 try {
-                    UserManager.getUser().SaveInfoUtilisateur();
+                    UserManager.getUser().SaveInfoUtilisateur(num);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }

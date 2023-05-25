@@ -8,11 +8,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
@@ -104,6 +102,7 @@ public class HomePageController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+       // Planning plan = user.PlanningActuelleJour(LocalDate.now());
        // plan.TrieListeTache(user.getTacheList());
         MesTaches.setOnAction(event -> VoirTache(user.getTacheList()));
         Unshecheduled.setOnAction(event -> VoirTache(user.getUnsheduledTaches()));
@@ -199,14 +198,19 @@ public class HomePageController implements Initializable {
             dateLabel.setFont(new Font("Calibri", 16));
             ScrollPane scrollPane1= new ScrollPane();
             VBox creneaucontainer = new VBox();
-            scrollPane1.setContent(scrollPane1);
+            scrollPane1.setFitToWidth(true);
+            scrollPane1.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            scrollPane1.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            scrollPane1.setPadding(new Insets(2,2,2,2));
+            creneaucontainer.setSpacing(3);
+            scrollPane1.setContent(creneaucontainer);
             creneaucontainer.setStyle("-fx-background-color:pink;");
             creneaucontainer.setSpacing(3);
             setCreneau(journee,creneaucontainer);
             //creneaucontainer.getChildren().addAll(new Button(), new Button(), new Button(), new Button());
 
             jour.getChildren().add(dateLabel);
-            jour.getChildren().add(creneaucontainer);
+            jour.getChildren().add(scrollPane1);
             //jour.setPadding(new Insets(15, 10, 10, 10));
             VBox.setVgrow(dateLabel, Priority.ALWAYS);
             VBox.setVgrow(creneaucontainer, Priority.ALWAYS);
@@ -229,25 +233,25 @@ public class HomePageController implements Initializable {
         if (vide){
             Planning plan = user.PlanningActuelleJour(jour.getDate());
             FXMLLoader fxmlLoader=new FXMLLoader(getClass().getResource("Tache.fxml"));
-            TacheController tacheController=new TacheController(creneau);
+
             if (creneau!= null){
                 System.out.println(creneau.getDate());
 
                 System.out.println("_______________************__________");
-
-            fxmlLoader.setControllerFactory(obj -> tacheController);
             }
+            fxmlLoader.setControllerFactory(obj -> new TacheController(creneau));
+            Parent root1 = fxmlLoader.load();
+            TacheController tacheController=fxmlLoader.getController();
             tacheController.setPlanning(plan);
             tacheController.setJour(jour);
-            Parent root1 = fxmlLoader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(root1));
             stage.show();
-           tacheController.AjouterUneSeulTache();
+            tacheController.AjouterTacheManu();
 
         }
         else{
-            Taches tache = jour.getTache(creneau);
+            Taches tache = jour.getTache(creneau);// il ne reconnaît pas créneau ?? jsp prq
             if (tache == null)
                 System.out.println("TACHE NULLE ://////////////////////////////");
             else
@@ -259,14 +263,10 @@ public class HomePageController implements Initializable {
         List<Creneau> listetemp = new ArrayList<>();
         listetemp.addAll(jour.getCreneauxLibres());
         listetemp.addAll(jour.getCreneauxPris());
-
         listetemp.sort(Comparator.comparing(Creneau::getHeureDebut));
         String texteBouton = null;
-        if (listetemp.isEmpty())
-            System.out.println("LISTE CRENEAUX VIDE");
 
         for (Creneau creneau : listetemp) {
-            System.out.println("creneau i TEST TEST");
             if (jour.getCreneauxLibres().contains(creneau)) {
                 texteBouton = creneau.getHeureDebut().toString() + " - " + creneau.getHeureFin().toString();
                 Button boutonCreneau = new Button(texteBouton);
@@ -291,13 +291,15 @@ public class HomePageController implements Initializable {
                     System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
                    System.out.println(tache.getName());
                 }
-                for (Taches tache : taches) {
-                    if (tache.getCreneau() == creneau) {
-                        texteBouton = tache.getName();
-                        break;
+                 for (Taches tache : taches) {
+                    if (tache.getCreneau().equals(creneau)) {
+                        texteBouton = tache.getName()+"\n"+tache.getCreneau().getHeureDebut()+"-"+tache.getCreneau().getHeureFin();/** y avait une erreur ici jsp prq?? il faisait pas tache.getCreneau == creneau ??**/
+                         break;
                     }
                 }
-                Button boutonTache = new Button(texteBouton);
+                Button boutonTache = new Button(texteBouton );
+                boutonTache.setWrapText(true);
+                boutonTache.setTextAlignment(TextAlignment.CENTER);
                 boutonTache.getStyleClass().add("creneaupris");
                 // Ajouter le bouton à la vbox creneaucontainer
                 creneaucontainer.getChildren().add(boutonTache);
@@ -470,4 +472,146 @@ public class HomePageController implements Initializable {
         scrollPane.setVisible(false);
 
     }
+    @FXML
+    private void NvPlanning() {
+        // Create a new stage for the pop-up window
+        Stage popupStage = new Stage();
+
+        // Set the modality to APPLICATION_MODAL to block input events for other windows
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.setTitle("Pop-up Window");
+        HBox dateStartBox = new HBox(20);
+        dateStartBox.setAlignment(Pos.CENTER_LEFT);
+        dateStartBox.setPrefSize(631, 50);
+        dateStartBox.getStyleClass().add("InfoField");
+        dateStartBox.setPadding(new Insets(10, 10, 10, 20));
+
+        Label startDateLabel = new Label("Saisissez la date de début:");
+        startDateLabel.setFont(new Font(13));
+
+        DatePicker DD = new DatePicker();
+
+        dateStartBox.getChildren().addAll(startDateLabel, DD);
+
+        HBox dateEndBox = new HBox(36);
+        dateEndBox.setAlignment(Pos.CENTER_LEFT);
+        dateEndBox.setPrefSize(631, 41);
+        dateEndBox.getStyleClass().add("InfoField");
+        dateEndBox.setPadding(new Insets(10, 10, 10, 20));
+
+        Label endDateLabel = new Label("Saisissez la date de fin:");
+        endDateLabel.setFont(new Font(13));
+
+        DatePicker DF = new DatePicker();
+
+        dateEndBox.getChildren().addAll(endDateLabel, DF);
+
+        Button continueButton = new Button("Terminer");
+        continueButton.setStyle("-fx-text-fill: white;" +
+                "-fx-background-color: #3F9984;" +
+                "-fx-font-family: 'Calibri';" +
+                "-fx-background-radius: 5;" +
+                "-fx-border-radius: 5;" +
+                "-fx-font-weight: bold;"+
+                "-fx-font-size: 14px;");
+        continueButton.setPrefWidth(100);
+
+        Button AnnulerButton= new Button("Annuler");
+        AnnulerButton.setStyle("-fx-text-fill: white;" +
+                "-fx-background-color: lightgrey;" +
+                "-fx-font-family: 'Calibri';" +
+                "-fx-background-radius: 5;" +
+                "-fx-border-radius: 5;" +
+                "-fx-font-weight: bold;"+
+                "-fx-font-size: 14px;");
+        AnnulerButton.setPrefWidth(100);
+
+        HBox ButtonHbox = new HBox();
+        ButtonHbox.setAlignment(Pos.CENTER);
+        ButtonHbox.setSpacing(160);
+        ButtonHbox.setFillHeight(true);
+        ButtonHbox.getChildren().addAll(AnnulerButton,continueButton);
+        Label label = new Label("Creer un nouveau planning");
+        label.setStyle("-fx-font-family:'Calibri';"+
+                "-fx-font-weight:bold;"+
+                "-fx-font-size: 16px;"+
+                "-fx-text-fill:#3F9984;");
+        // Create the layout for the pop-up window
+        VBox popupRoot = new VBox(20);
+        // popupRoot.setAlignment(Pos.CENTER);
+        popupRoot.setPadding(new Insets(10));
+        popupRoot.setAlignment(Pos.CENTER_LEFT);
+        popupRoot.getChildren().addAll(label,dateStartBox,dateEndBox, ButtonHbox);
+        AnnulerButton.setOnAction(event -> popupStage.close());
+        continueButton.setOnAction(event -> {
+          try {
+              LocalDate dateF = DF.getValue();
+              LocalDate dateD = DD.getValue();
+              LocalDate currentDate = LocalDate.now();
+
+              if (dateD == null) {
+                  dateD = currentDate;
+              }
+
+              if (dateD.isBefore(currentDate)) {
+                  throw new IllegalArgumentException("La date de début doit être supérieure ou égale à la date d'aujourd'hui.");
+              }
+              else{
+                  popupRoot.getChildren().removeIf(node -> node instanceof Label && ((Label) node).getText().equals("La date de début doit être supérieure ou égale à la date d'aujourd'hui."));
+
+              }
+
+              if (dateF == null) {
+                  throw new IllegalArgumentException("Vous devez sélectionner une date de fin.");
+              }
+              else{
+                  popupRoot.getChildren().removeIf(node -> node instanceof Label && ((Label) node).getText().equals("Vous devez sélectionner une date de fin."));
+
+              }
+
+
+              if (dateF.isBefore(dateD)) {
+                  throw new IllegalArgumentException("La date de fin doit être postérieure à la date de début.");
+              }
+              else{
+                  popupRoot.getChildren().removeIf(node -> node instanceof Label && ((Label) node).getText().equals("La date de fin doit être postérieure à la date de début."));
+
+              }
+              user.newPlanning(new Planning(dateD, dateF));
+              if (popupRoot.getChildren().stream()
+                      .anyMatch(node -> node instanceof Label && ((Label) node).getStyle().equals("-fx-text-fill: red;"))){
+                  throw new HnadleException("Erreur dans les remplissage des donnees ");
+
+              }else{
+                  popupStage.close();}
+          }
+
+            catch (IllegalArgumentException e) {
+                  // Handle the exception here
+                  showError(e.getMessage(),popupRoot);
+              }
+          catch (HnadleException e){
+              showError(e.getMessage(),popupRoot);
+          }
+
+
+        });
+
+
+        // Create the scene for the pop-up window
+        Scene scene = new Scene(popupRoot, 400, 250);
+
+        popupStage.setScene(scene);
+        popupStage.showAndWait();
+    }
+    private void showError(String message,VBox Vbox) {
+        // Remove any previous error messages
+        Vbox.getChildren().removeIf(node -> node instanceof Label && ((Label) node).getStyle().equals("-fx-text-fill: red;"));
+
+        // Display the error message in red above the elements
+        Label errorLabel = new Label(message);
+        errorLabel.setStyle("-fx-text-fill: red;");
+        Vbox.getChildren().add(1, errorLabel);
+    }
+
 }

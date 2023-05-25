@@ -22,9 +22,10 @@ public class system implements Serializable{
     public void addUser(User user) {
         users.add(user);
     }
-
+    private  int i=0;
 
     public boolean authenticate(String username, String password) {
+
         for (User user : users) {
             System.out.println(user.getPassward());
             if (user.getPseudo().equals(username) ) {
@@ -34,6 +35,7 @@ public class system implements Serializable{
                     return true;
                 }
             }
+            i++;
         }
         return false;
     }
@@ -53,5 +55,13 @@ public class system implements Serializable{
         this.users=s.getUsers();
         filein.close();
         in.close();
+    }
+
+    public int getI() {
+        return i;
+    }
+
+    public void setI(int i) {
+        this.i = i;
     }
 }

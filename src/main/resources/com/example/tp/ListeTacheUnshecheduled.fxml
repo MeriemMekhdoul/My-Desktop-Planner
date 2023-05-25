@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<AnchorPane prefHeight="488.0" prefWidth="490.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" layoutX="30.0" layoutY="64.0" prefHeight="289.0" prefWidth="430.0" vbarPolicy="NEVER">
+         <content>
+            <VBox fx:id="tacheContainer" prefHeight="285.0" prefWidth="429.0" />
+         </content>
+      </ScrollPane>
+      <Label layoutX="30.0" layoutY="25.0" text="Les taches qui  n'on pas pue etre plannifier:" />
+      <Label layoutX="54.0" layoutY="359.0" text="Voulez vous rallonger la periode du planning ?" />
+      <Button layoutX="193.0" layoutY="383.0" mnemonicParsing="false" text="oui" />
+      <Button layoutX="276.0" layoutY="383.0" mnemonicParsing="false" text="non" />
+      <Button layoutX="329.0" layoutY="435.0" mnemonicParsing="false" text="Accepter le planning" />
+      <Button layoutX="38.0" layoutY="435.0" mnemonicParsing="false" text="Annuler la plannification" wrapText="true" />
+      <Button layoutX="221.0" layoutY="435.0" mnemonicParsing="false" text="Replanifier" />
+   </children>
+</AnchorPane>

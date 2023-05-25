@@ -104,6 +104,7 @@ public class CreerCreneauController implements Initializable {
                 /*UserManager.getUser()*/ user.newCalender(calendrier);
                 calendrier.getJournee(date).addCreneauLibre(creneau_);
             }
+            creneau_.setDate(date);
             date = date.plusDays(periodicite);
         }
     }
@@ -217,6 +218,7 @@ public class CreerCreneauController implements Initializable {
         Calendar calendar = Calendar.getInstance();
         Date currentDate = calendar.getTime();
         LocalDate date = currentDate.toInstant().atZone(calendar.getTimeZone().toZoneId()).toLocalDate();
+        nvCreneau.setDate(date);
         /*UserManager.getUser()*/user.getCalendar(Year.now().getValue()).getJournee(date).addCreneauLibre(nvCreneau);
     }
 

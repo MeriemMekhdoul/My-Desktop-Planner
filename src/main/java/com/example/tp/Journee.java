@@ -26,18 +26,33 @@ public class Journee implements Serializable {
         this.date = date;
     }
     public void addCreneauLibre(Creneau nvcreneau){
-        this.creneauxLibres.add(nvcreneau);
+        if (this.creneauxLibres.contains(nvcreneau))
+            System.out.println("creneau deja existant");
+        else
+            this.creneauxLibres.add(nvcreneau);
     }
     public void suppCreneauLibre(Creneau creneau){
-        this.creneauxLibres.remove(creneau);
+        if (!this.creneauxLibres.contains(creneau))
+            System.out.println("creneau non existant");
+        else
+            this.creneauxLibres.remove(creneau);
     }
     public void addCreneauPris(Creneau nvcreneau){
-        this.creneauxPris.add(nvcreneau);
+        if (this.creneauxPris.contains(nvcreneau))
+            System.out.println("creneau deja existant");
+        else
+            this.creneauxPris.add(nvcreneau);
     }
     public void suppCreneauPris(Creneau creneau){
-        this.creneauxPris.remove(creneau);
+        if (!this.creneauxPris.contains(creneau))
+           System.out.println("creneau non existant");
+        else
+            this.creneauxPris.remove(creneau);
+
     }
     public void addtache(Taches tache){
+        if (this.tacheList.contains(tache))
+            System.out.println("tache deja existante");
         this.tacheList.add(tache);
     }
     public void supptache(Taches tache){

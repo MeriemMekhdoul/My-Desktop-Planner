@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -72,6 +73,8 @@ public class TacheController implements Initializable {
     }
     public Creneau creneau;
     private User user;
+    @FXML
+    private HBox HboxRadioButton;
     public TacheController(Creneau c){
         this.creneau=c;
     }
@@ -82,27 +85,88 @@ public class TacheController implements Initializable {
     public TacheController(){}
 
     @FXML
-    private void handleSaveButton() {
+    private void handleSaveButton(Boolean manu) {
         if (tache==null) {
             try {
                 boolean isSimple = simple.isSelected();
                 boolean isDecomposable = decomposable.isSelected();
 
                 if (isSimple && !isDecomposable) {
-                    Taches tacheSimple = new TacheSimple();
+                    TacheSimple tacheSimple = new TacheSimple();
                     RemplirTache(tacheSimple);
-                } else if (!isSimple && isDecomposable) {
-                    Taches tacheDecomposee = new TacheDecomposee();
-                    TacheDecomposee tacheDecomposeeObj = (TacheDecomposee) tacheDecomposee;
-                    RemplirTache(tacheDecomposee);
-                    Journee j= user.getCalendar(2023).getJournee(LocalDate.now());
-                    for(Creneau creneau1 :tacheDecomposeeObj.DecomposerTache(j,planning)){
-                        System.out.println(creneau1.afficherCreneau());
-                    }
 
-                } else {
-                    throw new HnadleException("Vous devez choisir un type pour votre tâche.");
-                }
+                    if (periodicite !=0) {
+                        tacheSimple.setPeriodicite(periodicite);
+                        tacheSimple.setFinPeriodicite(dateFinTacheSimple);
+                        System.out.println("TEST TEST IMENE PERIODICITE VRAIE");
+
+                        List<Creneau> cr = planning.FindCreneauTachePeriodique(tacheSimple);
+                        if (cr== null){
+                            System.out.println("pas possible");
+                            // ouvrir popup
+                        }
+                        else {
+                            System.out.println("CR NON NULL JE VAIS SET LES TACHES");
+                            Journee j;
+                            for (int i =1; i<= cr.size();i++){
+                               j = user.getCalendar(cr.get(i).getDate().getYear()).getJournee(cr.get(i).getDate()) ;
+                               Creneau cr1 = cr.get(i);
+                                System.out.println("J'AFFICHE LES CRENEAUX  "+cr1.afficherCreneau());
+                               TacheSimple tacheSimple1 = new TacheSimple(tacheSimple);
+                               user.addTache(tacheSimple1);
+                               planning.addtache(tacheSimple1);
+                                tacheSimple1.setCreneau(cr1);
+                                j.suppCreneauLibre(cr1);
+                                List<Creneau> liste = cr1.decomposable(tacheSimple1);
+                                for (Creneau c: liste) {
+                                    c.setDate(j.getDate());
+                                    j.addCreneauLibre(c);
+                                    System.out.println("boucle liste creneau");
+                                }
+                                j.addCreneauPris(cr1);
+                            }
+                        }
+                    }else {
+                        if(!manu) //si manuelle je remplis seulement, sinon je lui trouve un creneau
+                            tacheSimple.setCreneau(planning.FindCreneauTacheSimple(tacheSimple));
+                    }
+                } else if (!isSimple && isDecomposable) {
+                    TacheDecomposee tacheDecomposee = new TacheDecomposee();
+                    RemplirTache(tacheDecomposee);
+                    Journee j = user.getCalendar(LocalDate.now().getYear()).getJournee(LocalDate.now());
+                    System.out.println("Jour AYUJOURDHUI + "+j.getDate());
+                    int i=0;
+                    LocalDate date = LocalDate.now();
+                    List<Creneau> cr=tacheDecomposee.DecomposerTache(j,planning);
+                    System.out.println("Jour APRES APPEL DECOMPOSER + "+j.getDate());
+                    System.out.println("PRINT JOURNEE+ "+j.afficherJournee());
+                    System.out.println("Jour APRES APPEL DECOMPOSER GET SIZE LISTE MERDE + "+j.getCreneauxLibres().size());
+                    if (cr!= null){
+                      for(Creneau creneau1 :cr){
+                            System.out.println("ON A TROUV CRENEAU .............."+creneau1.afficherCreneau());
+                           //boolean trouv = false;
+                            //chercher journee voir si elle continent creneau
+                           while( !j.getDate().equals(planning.getDateFin())){
+                               j = user.getCalendar(date.getYear()).getJournee(date);
+                               System.out.println("WHIIILLEEEE");
+                               System.out.println(j.getCreneauxLibres().size());
+                               if (j.getCreneauxLibres().contains(creneau1)){
+                                   System.out.println("if in the while XXXXXXXXXXXX"+creneau1.afficherCreneau());
+                                   j.addCreneauPris(creneau1);
+                                   j.suppCreneauLibre(creneau1);
+                                   j.addtache(tacheDecomposee.getSimple().get(i));
+                                   i++;
+                                   break;
+                               }
+                                date = date.plusDays(1);
+                                   //trouv = false;
+
+                           }
+                       }
+                    }
+                    } else {
+                        throw new HnadleException("Vous devez choisir un type pour votre tâche.");
+                    }
 
             } catch (HnadleException e) {
                 showError(e.getMessage(),6);
@@ -112,7 +176,10 @@ public class TacheController implements Initializable {
             // Modifying an existing task
            RemplirTache(tache);
         }
+
     }
+    private int periodicite=0;
+    private  LocalDate dateFinTacheSimple;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         user=UserManager.getUser();
@@ -138,6 +205,49 @@ public class TacheController implements Initializable {
             deadline.setValue(tache.getDeadline());
 
         }
+
+    }
+    public void Periodicite(){
+        HBox newHbox=new HBox(20);
+
+        simple.setOnAction(event -> {
+            if (simple.isSelected()) {
+                // Create a new button
+                newHbox.getChildren().clear();
+                Label label1= new Label("Souhaitez-vous planifier votre tâche de manière récurrente ?");
+                Button OUIButton = new Button("oui");
+                newHbox.getChildren().addAll(label1,OUIButton);
+                newHbox.setFillHeight(true);
+                newHbox.setAlignment(Pos.CENTER_LEFT);
+                // Calculate the index at which the button should be added
+                int index = Vbox.getChildren().indexOf(HboxRadioButton) + 1;
+                // Add the button at the calculated index
+                if (!Vbox.getChildren().contains(newHbox))
+                {   Vbox.getChildren().add(index,newHbox );
+                    OUIButton.setOnAction(event1 -> {
+                        newHbox.getChildren().clear();
+                        newHbox.setSpacing(5);
+                        Label label2= new Label("Repeter tous les:");
+                        TextField textField= new TextField();
+                        Label label3 = new Label("jours jusqu'au");
+                        DatePicker datefin=new DatePicker();
+                        newHbox.getChildren().addAll(label2,textField,label3,datefin);
+                        if (!textField.getText().isEmpty()){
+                            periodicite=Integer.parseInt(textField.getText());
+                        }
+                        if(datefin.getValue()!=null){
+                            dateFinTacheSimple=datefin.getValue();
+                        }
+                    }); }
+            }
+        });
+        decomposable.setOnAction(event -> {
+            if (decomposable.isSelected()) {
+                // Remove the button from the VBox
+                Vbox.getChildren().remove(newHbox);
+            }
+
+        });
 
     }
     public  void UpdateEncouragement(){
@@ -166,13 +276,14 @@ public class TacheController implements Initializable {
             BloqueHbox.setVisible(false);
             etat.setDisable(true);
             Réinitialiser();
+            Periodicite();
             NvTache.setOnAction(event ->{
-                handleSaveButton();
+                handleSaveButton(false);
                 Réinitialiser();
             });
             Annuler.setOnAction(event -> handleCancelButton());
             Valider.setOnMouseClicked(mouseEvent ->{
-                handleSaveButton();
+                handleSaveButton(false);
                 /**ici faire la redirection vers le module qui genere auto un set de taches**/
                 Stage stage= (Stage) NvTache.getScene().getWindow();
                 stage.close();
@@ -201,10 +312,11 @@ public class TacheController implements Initializable {
         NvTache.setVisible(false);
         BloqueHbox.setVisible(false);
         etat.setDisable(true);
+        Periodicite();
         Valider.setOnAction(event ->{
             /**ici faire la redirection vers le module qui genere auto une tache**/
             try {
-                handleSaveButton();
+                handleSaveButton(false);
                 if (!erreursPresentes()){
                     Stage stage = (Stage) NvTache.getScene().getWindow();
                     stage.close();}
@@ -228,7 +340,61 @@ public class TacheController implements Initializable {
                 System.out.println("deadline="+t.getDeadline());
             }
         });
-        Annuler.setOnAction(event -> handleCancelButton());
+        Annuler.setOnAction(event -> {
+            Stage stage = (Stage) NvTache.getScene().getWindow();
+            stage.close();});
+    }
+    @FXML
+    public void AjouterTacheManu(){
+        NvTache.setVisible(false);
+        BloqueHbox.setVisible(true);
+        etat.setDisable(true);
+        HBox hbox = new HBox(20);
+        Label heureD= new Label("Heure de debut");
+        List<Integer> heure = new ArrayList<>();
+        for (int i = 0; i <= 24; i++) {
+            heure.add(i);
+        }
+        ComboBox<Integer> HeureDebut= new ComboBox<>();
+        HeureDebut.getItems().addAll(heure);
+        for (int i = 0; i <= 59; i++) {
+            heure.add(i);
+        }
+        ComboBox<Integer> MinDebut= new ComboBox<>();
+        MinDebut.getItems().addAll(heure);
+        hbox.getChildren().addAll(heureD,HeureDebut,MinDebut);
+        Vbox.getChildren().add(2,hbox);
+        Valider.setOnAction(event ->{
+            /**ici faire la redirection vers le module qui genere auto une tache**/
+            try {
+                handleSaveButton(true);
+               /* if (HeureDebut.getValue()!=null){
+                    Creneau cr = new Creneau();
+                    //cr.setHeureDebut(HeureDebut.getValue());
+                }*/
+                tache.setCreneau(creneau);
+                jour.suppCreneauLibre(creneau);
+                List<Creneau> liste = creneau.decomposable(tache);
+                for (Creneau c: liste) {
+                    c.setDate(jour.getDate());
+                    jour.addCreneauLibre(c);
+                    System.out.println("boucle liste creneau");
+                }
+                System.out.println("je suis dans le remplisage :"+tache.getCreneau().afficherCreneau());
+                System.out.println("je suis dans le remplisage 2 :"+creneau.afficherCreneau());
+                jour.addCreneauPris(creneau);
+                if (!erreursPresentes()){
+                    Stage stage = (Stage) NvTache.getScene().getWindow();
+                    stage.close();}
+                else
+                    throw new HnadleException("erreur dans le remplissage ");
+            } catch (HnadleException e) {
+                //throw new RuntimeException(e);
+            }
+        });
+        Annuler.setOnAction(event -> {
+            Stage stage = (Stage) NvTache.getScene().getWindow();
+            stage.close();});
     }
 
     @FXML
@@ -242,7 +408,7 @@ public class TacheController implements Initializable {
         decomposable.setDisable(true);
         Valider.setOnAction(e1 -> {
             try {
-                handleSaveButton();
+                handleSaveButton(false);
                 if (erreursPresentes()){
                 Stage stage = (Stage) NvTache.getScene().getWindow();
                 stage.close();}
@@ -252,7 +418,9 @@ public class TacheController implements Initializable {
                   System.out.println("erreur de remplissage");
                 }
         });
-        Annuler.setOnAction(event -> handleCancelButton());
+        Annuler.setOnAction(event -> {
+            Stage stage = (Stage) NvTache.getScene().getWindow();
+            stage.close();});
     }
     private Boolean erreursPresentes(){
         return Vbox.getChildren().stream()
@@ -265,7 +433,9 @@ public class TacheController implements Initializable {
         decomposable.setSelected(false);
         Duree.setText("0");
         bloquee.setSelected(false);
+        tache=null;
     }
+
 
     public void setJour(Journee jour) {
         this.jour = jour;
@@ -302,10 +472,6 @@ public class TacheController implements Initializable {
             t.setPriorite(priorite.getValue());
             t.setEtat(Etat.NOT_REALIZED);
             t.creneau.setBloque(bloquee.isSelected());
-            if(creneau!= null){
-                t.setCreneau(creneau);
-                System.out.println(t.getCreneau().afficherCreneau());
-            }
 
             if(tache!= null){
                 simple.setDisable(true);
@@ -317,15 +483,9 @@ public class TacheController implements Initializable {
                 listeTache.add(t);/** est ce que ns7a9ha???**/
                 if (jour!=null) {
                     jour.addtache(t);// ajouter dans la liste de tache de la journee
-                    for (Creneau c:creneau.decomposable(t)) {
-                        jour.addCreneauLibre(c);
-                        System.out.println("boucle liste creneau");
-                    }
-                    jour.suppCreneauLibre(creneau);
-                    jour.addCreneauPris(creneau);
                 }
                 if (planning!= null)
-                {   planning.addtache(t);
+                {   planning.addtache((Taches)t);
                     System.out.println("Le planning est non null"+planning.getDateDebut());}// i don't know about this one
                // user.PlanningActuelle(tache).FindCreneauTacheSimple(tache);
 

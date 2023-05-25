@@ -159,17 +159,17 @@ public class User implements Serializable {
     public void setPassward(String passward) {
         this.password = passward;
     }
-    public void SaveInfoUtilisateur() throws IOException {
+    public void SaveInfoUtilisateur(String num) throws IOException {
 
-        FileOutputStream fileout = new FileOutputStream(System.getProperty("user.home")+"\\MyDesktopPlanner\\UserInfo"+"\\User-info.bin");
+        FileOutputStream fileout = new FileOutputStream(System.getProperty("user.home")+"\\MyDesktopPlanner\\UserInfo\\User"+num+"-info.bin");
         ObjectOutput out = new ObjectOutputStream(fileout);
         out.writeObject(this);
         out.close();
         fileout.close();
     }
-    public void LoadUtilisateur() throws IOException, ClassNotFoundException {
+    public void LoadUtilisateur(String num) throws IOException, ClassNotFoundException {
         User Utilisateur;
-        FileInputStream filein = new FileInputStream(System.getProperty("user.home")+"\\MyDesktopPlanner\\UserInfo"+"\\User-info.bin");
+        FileInputStream filein = new FileInputStream(System.getProperty("user.home")+"\\MyDesktopPlanner\\UserInfo\\User"+num+"-info.bin");
         ObjectInput in = new ObjectInputStream(filein);
         Utilisateur = (User) in.readObject();
         this.Pseudo= Utilisateur.getPseudo();
