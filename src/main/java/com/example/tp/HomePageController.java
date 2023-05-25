@@ -442,7 +442,7 @@ public class HomePageController implements Initializable {
     private Button Unshecheduled,MesTaches;
     @FXML
     private StackPane Stack;
-    ScrollPane scrollPane;
+    private ScrollPane scrollPane;
     public void VoirTache(List<Taches> list){
         mois.setVisible(false);
         scrollPane=new ScrollPane();

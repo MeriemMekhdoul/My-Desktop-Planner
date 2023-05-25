@@ -16,9 +16,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="559.0" prefWidth="529.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.TacheController">
+<AnchorPane prefHeight="581.0" prefWidth="529.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.TacheController">
    <children>
-      <VBox fx:id="Vbox" layoutX="67.0" layoutY="67.66666666666669" prefHeight="375.0" prefWidth="388.0" spacing="15.0" AnchorPane.topAnchor="67.66666666666669">
+      <VBox fx:id="Vbox" layoutX="67.0" layoutY="68.0" prefHeight="459.0" prefWidth="388.0" spacing="15.0" AnchorPane.topAnchor="68.0">
          <children>
             <TextField fx:id="NomTache" prefHeight="25.0" prefWidth="210.0" styleClass="tous" text="Nom tache" />
             <HBox alignment="CENTER_LEFT" prefHeight="29.0" prefWidth="100.0" spacing="32.0">
@@ -57,6 +57,15 @@
                   <ComboBox fx:id="categorie" prefHeight="25.0" prefWidth="285.0" styleClass="tous" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
+            <HBox fx:id="EtatHbox" alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="312.0" spacing="43.0">
+               <children>
+                  <Label prefHeight="17.0" prefWidth="36.0" text="Etat:">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Label>
+                  <ComboBox fx:id="etat" onAction="#UpdateEncouragement" prefHeight="25.0" prefWidth="286.0" styleClass="tous" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
             <Label text="Type de tache:">
                <font>
                   <Font size="14.0" />
@@ -84,15 +93,31 @@
                      </font></RadioButton>
                </children>
             </HBox>
-            <HBox fx:id="EtatHbox" alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="312.0" spacing="43.0">
+            <VBox fx:id="VboxPeriod" prefHeight="67.0" prefWidth="357.0" spacing="8.0" visible="false">
                <children>
-                  <Label prefHeight="17.0" prefWidth="36.0" text="Etat:">
+                  <Label text="Souhaitez-vous planifier votre tâche de manière récurrente ?">
                      <font>
-                        <Font size="14.0" />
-                     </font></Label>
-                  <ComboBox fx:id="etat" onAction="#UpdateEncouragement" prefHeight="25.0" prefWidth="286.0" styleClass="tous" HBox.hgrow="ALWAYS" />
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="4.0">
+                     <children>
+                        <Label text="Repeter tous les:">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="periodiciteText" prefHeight="25.0" prefWidth="48.0" />
+                        <Label text="jours jusqu'au">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <DatePicker fx:id="FinPeriodicite" prefHeight="25.0" prefWidth="131.0" />
+                     </children>
+                  </HBox>
                </children>
-            </HBox>
+            </VBox>
             <HBox fx:id="BloqueHbox" alignment="CENTER_LEFT" prefHeight="29.0" prefWidth="100.0" spacing="11.0">
                <children>
                   <CheckBox fx:id="bloquee" mnemonicParsing="false">

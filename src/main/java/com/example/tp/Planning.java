@@ -1,10 +1,15 @@
 package com.example.tp;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -145,14 +150,20 @@ public class Planning implements Serializable {
         List<Creneau> listCreneau= new ArrayList<>();
         Creneau cr=FindCreneauTacheSimple(tache);
         if(cr!=null){
-            listCreneau.add(cr);
-            LocalDate date= cr.getDate();
-        while(!date.equals(tache.getFinPeriodicite())){
+            //listCreneau.add(cr);
+            LocalDate date= cr.getDate().plusDays(tache.getPeriodicite());
+            System.out.println("*****************************************************"+date+"       "+tache.getFinPeriodicite());
+        while(!date.equals(tache.getFinPeriodicite())&& !date.isAfter(tache.getFinPeriodicite())){
             Journee jour = user.getCalendar(date.getYear()).getJournee(date);
+            System.out.println(jour.getDate());
+
+            System.out.println(jour.getCreneauxLibres().size());
             for (Creneau creneau: jour.getCreneauxLibres()){
+                System.out.println("je suis dans la boucle");
                 Duration dureeCreneau= Duration.between(creneau.getHeureDebut(),creneau.getHeureFin());
-                if ((creneau.getHeureDebut().equals(cr.getHeureDebut()) && tache.getDuree().compareTo(dureeCreneau) <= 0) || (creneau.getHeureDebut().isBefore(cr.getHeureDebut()) && creneau.getHeureFin().isAfter(cr.getHeureFin()))||((creneau.getHeureFin().equals(cr.getHeureFin()) && tache.getDuree().compareTo(dureeCreneau) <= 0) ))
+                if ((creneau.getHeureDebut().equals(cr.getHeureDebut()) && tache.getDuree().compareTo(dureeCreneau) <= 0) || (creneau.getHeureDebut().isBefore(cr.getHeureDebut()) && creneau.getHeureFin().isAfter(cr.getHeureFin()))||((creneau.getHeureFin().equals(cr.getHeureFin()) && tache.getDuree().compareTo(dureeCreneau) <= 0)))
                 {// les conditions c'est  pour programmer la tache exactement dans le mm creneau
+                    System.out.println("j ai trouver un creneau pour la periodicite"+creneau.afficherCreneau());
                     listCreneau.add(creneau);//ici jai add ga3 le creneau jsp et j ai pas set dans tache
                     PasCreneau= true;
                     break;
@@ -161,6 +172,8 @@ public class Planning implements Serializable {
                     PasCreneau=false;
             }
             if (jour.getCreneauxLibres().isEmpty()|| !PasCreneau){
+                openPopup("Pas de creneau libre dans la journee"+jour.getDate()+"pour planifier cette tache");
+                System.out.println(PasCreneau);
                 System.out.println("ne peut pas garentir la periodicite tous les "+tache.getPeriodicite()+" jour");
                 return null;
             }
@@ -221,6 +234,51 @@ public class Planning implements Serializable {
             //load le fxml des taches unshecheduled
         }
 
+    }
+    private void openPopup(String s) {
+        // Create a new stage for the pop-up window
+        Stage popupStage = new Stage();
+
+        // Set the modality to APPLICATION_MODAL to block input events for other windows
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+
+        // Set the title of the pop-up window
+        popupStage.setTitle("Pop-up Window");
+
+        // Create a label to display a message in the pop-up window
+        Label label = new Label(s);
+        label.setStyle("-fx-font-family: 'Calibri';" +
+                "-fx-text-fill: #aaaaaa;"+ "-fx-font-size: 16px;");
+        label.setWrapText(true);
+        Label label1 = new Label("la tache sera planifier que dans le premier creneau q'elle a trouver");
+        label.setStyle("-fx-font-family: 'Calibri';" +
+                "-fx-text-fill:#23574B ;"+ "-fx-font-size: 14px;");
+        label.setWrapText(true);
+        label.setTextAlignment(TextAlignment.CENTER);
+        // Create a button to close the pop-up window
+        Button continueButton = new Button("Annules la planification periodique");
+        continueButton.setStyle("-fx-text-fill: white;" +
+                "-fx-background-color: #3F9984;" +
+                "-fx-font-family: 'Calibri';" +
+                "-fx-background-radius: 5;" +
+                "-fx-border-radius: 5;" +
+                "-fx-font-weight: bold;"+
+                "-fx-font-size: 16px;");
+        continueButton.setPrefWidth(200);
+        continueButton.setPrefHeight(40);
+        continueButton.setWrapText(true);
+        continueButton.setOnAction(event -> popupStage.close());
+
+        // Create the layout for the pop-up window
+        VBox popupRoot = new VBox(20);
+        popupRoot.setAlignment(Pos.CENTER);
+        popupRoot.setPadding(new Insets(10));
+        popupRoot.getChildren().addAll(label1,label, continueButton);
+
+        // Create the scene for the pop-up window
+        Scene popupScene = new Scene(popupRoot, 400, 200);
+        popupStage.setScene(popupScene);
+        popupStage.showAndWait();
     }
 
 }

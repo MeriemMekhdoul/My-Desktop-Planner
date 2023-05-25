@@ -94,12 +94,21 @@ public class TacheController implements Initializable {
                 if (isSimple && !isDecomposable) {
                     TacheSimple tacheSimple = new TacheSimple();
                     RemplirTache(tacheSimple);
+                    System.out.println(manu);
 
-                    if (periodicite !=0) {
+                    if (!manu){
+                        System.out.println("Periodicite ="+periodicite);
+                        if (!periodiciteText.getText().isEmpty()) {
+                            periodicite = Integer.parseInt(periodiciteText.getText());
+                            System.out.println("je set la periodicite: " + periodicite);
+                        }
+                        if (FinPeriodicite.getValue() != null) {
+                            dateFinTacheSimple = FinPeriodicite.getValue();
+                        }
+                    if (periodicite !=0 ) {
                         tacheSimple.setPeriodicite(periodicite);
                         tacheSimple.setFinPeriodicite(dateFinTacheSimple);
-                        System.out.println("TEST TEST IMENE PERIODICITE VRAIE");
-
+                        System.out.println("JE SUIS DANS LA PERIEODICITE");
                         List<Creneau> cr = planning.FindCreneauTachePeriodique(tacheSimple);
                         if (cr== null){
                             System.out.println("pas possible");
@@ -108,14 +117,16 @@ public class TacheController implements Initializable {
                         else {
                             System.out.println("CR NON NULL JE VAIS SET LES TACHES");
                             Journee j;
-                            for (int i =1; i<= cr.size();i++){
+                            System.out.println(cr.size());
+                            for (int i =0; i< cr.size();i++){
                                j = user.getCalendar(cr.get(i).getDate().getYear()).getJournee(cr.get(i).getDate()) ;
                                Creneau cr1 = cr.get(i);
-                                System.out.println("J'AFFICHE LES CRENEAUX  "+cr1.afficherCreneau());
+                               System.out.println("J'AFFICHE LES CRENEAUX  "+cr1.afficherCreneau());
                                TacheSimple tacheSimple1 = new TacheSimple(tacheSimple);
+                               System.out.println("tache name is "+tacheSimple1.getName());
                                user.addTache(tacheSimple1);
                                planning.addtache(tacheSimple1);
-                                tacheSimple1.setCreneau(cr1);
+                               tacheSimple1.setCreneau(cr1);
                                 j.suppCreneauLibre(cr1);
                                 List<Creneau> liste = cr1.decomposable(tacheSimple1);
                                 for (Creneau c: liste) {
@@ -124,11 +135,13 @@ public class TacheController implements Initializable {
                                     System.out.println("boucle liste creneau");
                                 }
                                 j.addCreneauPris(cr1);
+                                j.getTacheList().add(tacheSimple1);
                             }
                         }
                     }else {
-                        if(!manu) //si manuelle je remplis seulement, sinon je lui trouve un creneau
+                        //si manuelle je remplis seulement, sinon je lui trouve un creneau
                             tacheSimple.setCreneau(planning.FindCreneauTacheSimple(tacheSimple));
+                    }
                     }
                 } else if (!isSimple && isDecomposable) {
                     TacheDecomposee tacheDecomposee = new TacheDecomposee();
@@ -178,7 +191,7 @@ public class TacheController implements Initializable {
         }
 
     }
-    private int periodicite=0;
+
     private  LocalDate dateFinTacheSimple;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -207,11 +220,21 @@ public class TacheController implements Initializable {
         }
 
     }
-    public void Periodicite(){
-        HBox newHbox=new HBox(20);
+    @FXML
+    private VBox VboxPeriod;
 
-        simple.setOnAction(event -> {
-            if (simple.isSelected()) {
+    @FXML
+    private TextField periodiciteText;
+    @FXML
+    private DatePicker FinPeriodicite;
+    private int periodicite= 0;
+    public void Periodicite(){
+
+        simple.setOnAction(event ->{
+            VboxPeriod.setVisible(true);
+
+                });
+               /* if (simple.isSelected()) {
                 // Create a new button
                 newHbox.getChildren().clear();
                 Label label1= new Label("Souhaitez-vous planifier votre tâche de manière récurrente ?");
@@ -225,6 +248,7 @@ public class TacheController implements Initializable {
                 if (!Vbox.getChildren().contains(newHbox))
                 {   Vbox.getChildren().add(index,newHbox );
                     OUIButton.setOnAction(event1 -> {
+                        System.out.println("OUII POUR PERIODICITE ");
                         newHbox.getChildren().clear();
                         newHbox.setSpacing(5);
                         Label label2= new Label("Repeter tous les:");
@@ -232,19 +256,26 @@ public class TacheController implements Initializable {
                         Label label3 = new Label("jours jusqu'au");
                         DatePicker datefin=new DatePicker();
                         newHbox.getChildren().addAll(label2,textField,label3,datefin);
-                        if (!textField.getText().isEmpty()){
-                            periodicite=Integer.parseInt(textField.getText());
-                        }
-                        if(datefin.getValue()!=null){
-                            dateFinTacheSimple=datefin.getValue();
-                        }
-                    }); }
-            }
-        });
+                        textField.setOnAction(event2 -> {
+                            String enteredText = textField.getText();
+                            System.out.println("Entered Text: " + enteredText);
+                            // Perform further processing with the entered text
+                        });
+                            if (!textField.getText().isEmpty()) {
+                                periodicite = Integer.parseInt(textField.getText());
+                                System.out.println("je set la periodicite: " + periodicite);
+                            }
+                            if (datefin.getValue() != null) {
+                                dateFinTacheSimple = datefin.getValue();
+                            }
+                        });
+                    }
+            }});*/
         decomposable.setOnAction(event -> {
             if (decomposable.isSelected()) {
+                System.out.println("j ai clicker sur decomposable");
                 // Remove the button from the VBox
-                Vbox.getChildren().remove(newHbox);
+                VboxPeriod.setVisible(false);
             }
 
         });
@@ -275,8 +306,8 @@ public class TacheController implements Initializable {
     public void NvSetTaches(){
             BloqueHbox.setVisible(false);
             etat.setDisable(true);
-            Réinitialiser();
             Periodicite();
+            Réinitialiser();
             NvTache.setOnAction(event ->{
                 handleSaveButton(false);
                 Réinitialiser();
