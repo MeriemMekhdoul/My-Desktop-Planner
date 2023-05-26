@@ -1,0 +1,13 @@
+.button {
+    -fx-text-fill:black;
+    -fx-background-color:white;
+    -fx-font-family: "Calibri";
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-font-weight:bold;
+    -fx-cursor: hand;
+}
+
+.label{
+    -fx-font-family: "Calibri";
+}

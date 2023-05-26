@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="642.0" prefWidth="924.0" stylesheets="@FirstUseStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.FirstUtilisation">
+<AnchorPane prefHeight="599.0" prefWidth="924.0" stylesheets="@FirstUseStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tp.FirstUtilisation">
    <children>
       <VBox fx:id="Vbox" alignment="TOP_CENTER" layoutX="23.0" layoutY="82.0" prefHeight="515.0" prefWidth="878.0" spacing="12.0" AnchorPane.leftAnchor="23.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="82.0">
          <children>
@@ -82,22 +82,6 @@
                   </Label>
                   <Label opacity="0.5" text="Format:  hh:mm" />
                   <TextField fx:id="MinCreneau" styleClass="InfoField" />
-               </children>
-               <VBox.margin>
-                  <Insets left="50.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox fx:id="HboxTache" alignment="CENTER_LEFT" prefHeight="41.0" prefWidth="631.0" spacing="168.0">
-               <padding>
-                  <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
-               </padding>
-               <children>
-                  <Label text="Clickez ici pour ajouter des taches">
-                     <font>
-                        <Font size="13.0" />
-                     </font>
-                  </Label>
-                  <Button fx:id="AjoutTache" mnemonicParsing="false" onAction="#AjoutTache" prefHeight="32.0" prefWidth="141.0" text="Ajouter des taches" />
                </children>
                <VBox.margin>
                   <Insets left="50.0" />

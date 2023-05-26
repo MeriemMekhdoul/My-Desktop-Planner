@@ -29,10 +29,10 @@ abstract class Taches implements Serializable {
     }
     public void setPriorite(Priorite prio){
         this.priorite=prio ;
-    }  public Priorite getPriorite(){
-        return this.priorite;
-
-    }  public Etat getEtat(){
+    }
+    public Priorite getPriorite(){
+        return this.priorite;    }
+    public Etat getEtat(){
         return this.etat;
     }
     public void setEtat(Etat etat1){
@@ -47,7 +47,6 @@ abstract class Taches implements Serializable {
     public Creneau getCreneau(){
         return  this.creneau;
     }
-
     public void setCreneau(Creneau c) {
       this.creneau=c;
     }

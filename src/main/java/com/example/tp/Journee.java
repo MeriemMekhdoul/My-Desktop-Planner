@@ -10,6 +10,7 @@ public class Journee implements Serializable {
     private List<Creneau> creneauxLibres;
     private List<Creneau> creneauxPris;
     private List<Taches> tacheList;
+    private int NbrTacheCompletedToday=0;
 
     public Journee(){}
     public Journee(LocalDate date){
@@ -53,7 +54,8 @@ public class Journee implements Serializable {
     public void addtache(Taches tache){
         if (this.tacheList.contains(tache))
             System.out.println("tache deja existante");
-        this.tacheList.add(tache);
+        else
+            this.tacheList.add(tache);
     }
     public void supptache(Taches tache){
         this.tacheList.remove(tache);
@@ -61,18 +63,15 @@ public class Journee implements Serializable {
     public List<Taches> getTacheList() {
         return tacheList;
     }
-    private int NbrTacheCompletedToday=0;
     public void IncrementerNbrCompleted(int Nbr){
         NbrTacheCompletedToday++ ;
     }
-
     public List<Creneau> getCreneauxLibres() {
         return creneauxLibres;
     }
     public List<Creneau> getCreneauxPris() {
         return creneauxPris;
     }
-
     public String afficherJournee() {
         StringBuilder sb = new StringBuilder();
         sb.append("Date : ").append(date).append("\n");
@@ -84,18 +83,11 @@ public class Journee implements Serializable {
         for (Creneau creneau : creneauxPris) {
             sb.append("- ").append(creneau.afficherCreneau()).append("\n");
         }
-        /*sb.append("Tâches : ").append("\n");
-        for (Taches tache : tacheList) {
-            sb.append("- ").append(tache.afficherTache()).append("\n");
-        }*/
         return sb.toString();
     }
-
-
     public int getNbrTacheCompletedToday() {
         return NbrTacheCompletedToday;
     }
-
     public void setNbrTacheCompletedToday(int nbrTacheCompletedToday) {
         NbrTacheCompletedToday = nbrTacheCompletedToday;
     }

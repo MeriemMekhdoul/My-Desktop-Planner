@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class TacheSimple extends  Taches{
 
-    private int periodicite;
+    private int periodicite= 0;
     private LocalDate FinPeriodicite;
     public TacheSimple(){}
     public TacheSimple (TacheSimple t){

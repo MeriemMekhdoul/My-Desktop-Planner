@@ -16,7 +16,11 @@ public class Projet implements Serializable {
         this.tache = tache;
     }
     public  void addTache(Taches newTache){
-        tache.add(newTache);
+        if (tache!=null)
+            if (!this.tache.contains(newTache)){
+                tache.add(newTache);
+            }
+
     }
     public void SuppTahce(Taches suppTache){
         tache.remove(suppTache);

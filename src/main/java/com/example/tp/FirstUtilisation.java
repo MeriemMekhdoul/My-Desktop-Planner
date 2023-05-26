@@ -26,7 +26,6 @@ public class FirstUtilisation implements Initializable {
 
     @FXML
     private DatePicker DD;
-
     @FXML
     private DatePicker DF;
     private User user;
@@ -34,40 +33,19 @@ public class FirstUtilisation implements Initializable {
     private Button AjoutTache;
     @FXML
     private TextField MinCreneau;
-
     @FXML
     private TextField MinTache;
-
     @FXML
     private HBox Hbox;
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        user=UserManager.getUser();
-
-
-
-    }
     @FXML
     private HBox HboxTache;
     @FXML
-    public void AjoutTache(){
-            HBox hbox= new HBox(10);
-            Button ajouterManu = new Button("Manuellement");
-            Button ajouterAuto = new Button("Automatiquement");
-            hbox.getChildren().addAll(ajouterManu,ajouterAuto);
-            HboxTache.setSpacing(22);
-            HboxTache.getChildren().remove(AjoutTache);
-            HboxTache.getChildren().add(hbox);
-            ajouterAuto.setOnAction(event1 -> {
-                try {
-                    CreeTache();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-    }
-    @FXML
     private VBox Vbox;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        user=UserManager.getUser();
+    }
     @FXML
     public void Terminer() {
         try {
@@ -119,35 +97,18 @@ public class FirstUtilisation implements Initializable {
             stage.close();
 
             System.out.println(user.getMinCreneau() + " " + user.getMinTaskDaily());
-
-            /**ici remplir dans le calendrier de home page**/
         } catch (IllegalArgumentException e) {
             // Handle the exception here
             showError(e.getMessage(),1);
         }
     }
-
-
     @FXML
     public void CreeCreneau() throws IOException {
         FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("CreerCreneau.fxml"));
         Parent root1 = fxmlLoader.load();
-      // CreerCreneauController creneauController= fxmlLoader.getController();
         Stage stage = new Stage();
         stage.setScene(new Scene(root1));
         stage.show();
-        /**fermer la page de first utilisation?**/
-    }
-    public void CreeTache() throws IOException {
-        FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("tache.fxml"));
-       // fxmlLoader.setControllerFactory(obj -> new TacheController());
-        Parent root1 = fxmlLoader.load();
-        TacheController tacheController= fxmlLoader.getController();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root1));
-        stage.show();
-        tacheController.NvSetTaches();
-        /**fermer la page de first utilisation?**/
     }
     private void showError(String message,int i) {
         // Remove any previous error messages
@@ -158,9 +119,6 @@ public class FirstUtilisation implements Initializable {
         errorLabel.setStyle("-fx-text-fill: red;");
         Vbox.getChildren().add(i, errorLabel);
     }
-
-
-
     private void clearErrorMessages() {
         // Remove any previous error messages from the VBox
         Vbox.getChildren().removeIf(node -> node instanceof Label && ((Label) node).getStyle().equals("-fx-text-fill: red;"));

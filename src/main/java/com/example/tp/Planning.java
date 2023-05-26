@@ -1,7 +1,9 @@
 package com.example.tp;
 
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -23,19 +25,22 @@ public class Planning implements Serializable {
     private LocalDate dateFin;
     private List<Taches> tacheList;
 
-    List<Taches> highPriorityTasks=new ArrayList<>();
-    List<Taches> mediumPriorityTasks =new ArrayList<>();
-    List<Taches> lowPriorityTasks=new ArrayList<>();
+    private List<Taches> highPriorityTasks=new ArrayList<>();
+    private List<Taches> mediumPriorityTasks =new ArrayList<>();
+    private List<Taches> lowPriorityTasks=new ArrayList<>();
 
+    private Map<Badge,Integer> badges;
     public Planning(){
     }
     public Planning(LocalDate dateDebut, LocalDate dateFin){
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         this.tacheList = new ArrayList<>();
-        //this.journeeList = new ArrayList<>();
+        this.badges=new HashMap<>();
     }
-
+    public void addBadge(Badge badge) {
+        badges.put(badge, badges.getOrDefault(badge, 0) + 1);
+    }
     //debutSetterGetter
     public LocalDate getDateDebut() {
         return dateDebut;
@@ -49,14 +54,16 @@ public class Planning implements Serializable {
     public void setDateFin(LocalDate dateFin) {
         this.dateFin = dateFin;
     }
-
     public List<Taches> getTacheList() {
         return tacheList;
     }
     public void setTacheList(List<Taches> tacheList) {
         this.tacheList = tacheList;
     }
+
     //endSetterGetter
+
+
 
     public void addtache(Taches tache){
         if(!this.tacheList.contains(tache))
@@ -68,6 +75,7 @@ public class Planning implements Serializable {
     public void TrieListeTache (List<Taches> tacheList){
 
         Comparator<Taches> priorityComparator = Comparator.comparingInt(tache -> {
+         if ((!tache.getCreneau().getBloque())){
             if (tache.getPriorite().equals(Priorite.HIGH)) {
                 return 3;
             } else if (tache.getPriorite().equals(Priorite.MEDIUM)) {
@@ -75,6 +83,7 @@ public class Planning implements Serializable {
             } else {
                 return 1;
             }
+            }return 0;
         });
         Collections.sort(tacheList, priorityComparator);
         Comparator<Taches> deadlineComparator = Comparator.comparing(Taches::getDeadline);
@@ -88,82 +97,54 @@ public class Planning implements Serializable {
             } else {
                 lowPriorityTasks.add(tache);
             }
-        }System.out.println("Med");
-        for (Taches t: mediumPriorityTasks){
-            System.out.println("Name="+t.getName());
-            System.out.println("Etat="+t.getEtat());
-            System.out.println("Duree="+t.getDuree());
-            System.out.println("prio="+t.getPriorite());
-            System.out.println("deadline="+t.getDeadline());
-        }System.out.println("LOW");
-        for (Taches t: lowPriorityTasks){
-
-            System.out.println("name="+t.getName());
-            System.out.println("Etat="+t.getEtat());
-            System.out.println("Duree="+t.getDuree());
-            System.out.println("prio="+t.getPriorite());
-            System.out.println("deadline="+t.getDeadline());
-        }System.out.println("Hight");
-        for (Taches t: highPriorityTasks){
-            System.out.println("Name="+t.getName());
-            System.out.println("Etat="+t.getEtat());
-            System.out.println("Duree="+t.getDuree());
-            System.out.println("prio="+t.getPriorite());
-            System.out.println("deadline="+t.getDeadline());
         }
     }
-    public Creneau FindCreneauTacheSimple(Taches tache){
-        LocalDate date= LocalDate.now();
+    public Creneau FindCreneauTacheSimple(Taches tache,LocalDate date){
         User user = UserManager.getUser();
-        while (!date.equals(dateFin)) {
+        while (!date.equals(dateFin) && !date.isAfter(tache.getDeadline())) {
             Journee jour = user.getCalendar(date.getYear()).getJournee(date);
             for (Creneau creneau: jour.getCreneauxLibres()){
                 Duration dureeCreneau= Duration.between(creneau.getHeureDebut(),creneau.getHeureFin());
                 if (tache.getDuree().compareTo(dureeCreneau)<=0){
-                    System.out.println("creneau trouver"+creneau.afficherCreneau()+" \n"+jour.getDate());
                     jour.suppCreneauLibre(creneau);
-                    tache.setCreneau(creneau);
+                    Creneau creneauTPM= new Creneau();
+                    creneauTPM.setHeureFin(creneau.getHeureDebut().plus(tache.getDuree()));
+                    creneauTPM.setHeureDebut(creneau.getHeureDebut());
+                    tache.setCreneau(creneauTPM);
                     List<Creneau> liste = creneau.decomposable(tache);
                     for (Creneau c: liste) {
                         c.setDate(jour.getDate());
                         jour.addCreneauLibre(c);
-                        System.out.println("boucle liste creneau");
                     }
+                    user.addTache(tache);
+                    tache.setCreneau(creneau);
                     jour.addCreneauPris(creneau);
                     jour.addtache(tache);
                     return creneau;
                 }
             }
             date=date.plusDays(1);
+
         }
-            System.out.println("aucun creneau libre pour ajouter cette tache");/** le mettre en pop up**/
-            user.getUnsheduledTaches().add(tache);// je supprime de la liste des taches??
-           // user.getTacheList().remove(tache);
+        user.getUnsheduledTaches().add(tache);
         return null;
     }
-
-
-    // j ai pas test jsp si ca marche
     public  List<Creneau> FindCreneauTachePeriodique(TacheSimple tache){
         boolean PasCreneau=true;
         User user = UserManager.getUser();
         List<Creneau> listCreneau= new ArrayList<>();
-        Creneau cr=FindCreneauTacheSimple(tache);
+        Creneau cr=FindCreneauTacheSimple(tache,LocalDate.now());
         if(cr!=null){
-            //listCreneau.add(cr);
             LocalDate date= cr.getDate().plusDays(tache.getPeriodicite());
-            System.out.println("*****************************************************"+date+"       "+tache.getFinPeriodicite());
-        while(!date.equals(tache.getFinPeriodicite())&& !date.isAfter(tache.getFinPeriodicite())){
+          while(!date.equals(tache.getFinPeriodicite()) && !date.isAfter(tache.getFinPeriodicite()) && !date.equals(tache.getDeadline())){
             Journee jour = user.getCalendar(date.getYear()).getJournee(date);
             System.out.println(jour.getDate());
 
             System.out.println(jour.getCreneauxLibres().size());
             for (Creneau creneau: jour.getCreneauxLibres()){
-                System.out.println("je suis dans la boucle");
                 Duration dureeCreneau= Duration.between(creneau.getHeureDebut(),creneau.getHeureFin());
                 if ((creneau.getHeureDebut().equals(cr.getHeureDebut()) && tache.getDuree().compareTo(dureeCreneau) <= 0) || (creneau.getHeureDebut().isBefore(cr.getHeureDebut()) && creneau.getHeureFin().isAfter(cr.getHeureFin()))||((creneau.getHeureFin().equals(cr.getHeureFin()) && tache.getDuree().compareTo(dureeCreneau) <= 0)))
                 {// les conditions c'est  pour programmer la tache exactement dans le mm creneau
-                    System.out.println("j ai trouver un creneau pour la periodicite"+creneau.afficherCreneau());
                     listCreneau.add(creneau);//ici jai add ga3 le creneau jsp et j ai pas set dans tache
                     PasCreneau= true;
                     break;
@@ -178,6 +159,10 @@ public class Planning implements Serializable {
                 return null;
             }
             date = date.plusDays(tache.getPeriodicite());
+            if(date.isAfter(tache.getDeadline())){
+                openPopup("Ce n'est pas possible de planifier cette tache jusqu'au "+ tache.getFinPeriodicite()+ "car sa deadline est pour le "+tache.getDeadline());
+                return null;
+            }
         }
           return listCreneau;
         }
@@ -186,54 +171,98 @@ public class Planning implements Serializable {
             return null ;
         }
     }
-    private void Planification(){
+    public void Planification(List<Taches> tacheList, LocalDate date){
+        List<Taches> listetemp = new ArrayList<>();
         User user = UserManager.getUser();
-        for (Taches tache:highPriorityTasks) {
-            if(tache instanceof TacheSimple){
-                TacheSimple simple = (TacheSimple) tache;
-                if (simple.getPeriodicite()==0){
-                FindCreneauTacheSimple(tache);}
-                else
-                    FindCreneauTachePeriodique(simple);// la sortie c'est une liste de creneaux , du coup j'ai pas encor programmer ces taches j'ai juste trouvé ou les mettre(creneaux)
+        TrieListeTache(tacheList);
+        listetemp.addAll(highPriorityTasks);
+        listetemp.addAll(mediumPriorityTasks);
+        listetemp.addAll(lowPriorityTasks);
+        List<Taches> TmpList= new ArrayList<>();
 
-            }
+        for (Taches tache:listetemp) {
+            if(tache instanceof TacheSimple){
+                if(!this.tacheList.contains(tache)){
+                    this.addtache(tache) ;
+                    TacheSimple simple = (TacheSimple) tache;
+                    if (simple.getPeriodicite()==0){
+                    FindCreneauTacheSimple(tache,LocalDate.now());
+                    TmpList.add(tache);
+                    }
+                    else{
+                    List<Creneau> cr = this.FindCreneauTachePeriodique(simple);
+                    simple.setPeriodicite(0);
+                    if (cr== null){
+                        System.out.println("pas possible");
+                        // ouvrir popup
+                    }
+                    else {
+                        Journee j;
+                        System.out.println(cr.size());
+                        for (int i =0; i< cr.size();i++){
+                            j = user.getCalendar(cr.get(i).getDate().getYear()).getJournee(cr.get(i).getDate()) ;
+                            Creneau cr1 = cr.get(i);
+                            TacheSimple tacheSimple1 = new TacheSimple(simple);
+                            user.addTache(tacheSimple1);
+                            this.addtache(tacheSimple1);
+                            tacheSimple1.setCreneau(cr1);
+                            j.suppCreneauLibre(cr1);
+                            List<Creneau> liste = cr1.decomposable(tacheSimple1);
+                            for (Creneau c: liste) {
+                                c.setDate(j.getDate());
+                                j.addCreneauLibre(c);
+                            }
+                            j.addCreneauPris(cr1);
+                            j.getTacheList().add(tacheSimple1);
+                            TmpList.add(tacheSimple1);
+
+                        }
+                       }
+                    }
+                }}
             else {
                 TacheDecomposee decomposable = (TacheDecomposee) tache;
-                decomposable.DecomposerTache(user.getCalendar(LocalDate.now().getYear()).getJournee(LocalDate.now()),this);
+                Journee j = user.getCalendar(date.getYear()).getJournee(date);
+                int i=0;
+                //LocalDate date = LocalDate.now();
+                List<Creneau> cr=decomposable.DecomposerTache(j,this);
+                if (cr!= null){
+                    for(Creneau creneau1 :cr){
+                        while( !j.getDate().equals(this.getDateFin())){
+                            j = user.getCalendar(date.getYear()).getJournee(date);
+                            if(!this.tacheList.contains(decomposable.getSimple().get(i))){
+                            if (j.getCreneauxLibres().contains(creneau1)){
+                                j.addCreneauPris(creneau1);
+                                j.suppCreneauLibre(creneau1);
+                                j.addtache(decomposable.getSimple().get(i));
+                                this.getTacheList().add(decomposable.getSimple().get(i));
+                                TmpList.add(decomposable.getSimple().get(i));
+                                date = date.plusDays(1);
+                                this.addtache(decomposable.getSimple().get(i)) ;
+                                user.addTache(decomposable.getSimple().get(i));
+                                i++;
+                                break;
+                            }
+                            else {
+                                System.out.println("non trouver");
+                            }
+                        }
+                            date = date.plusDays(1);}
+                    }
+                }
             }
         }
-        for (Taches tache:mediumPriorityTasks) {
-            if(tache instanceof TacheSimple){
-                TacheSimple simple = (TacheSimple) tache;
-                if (simple.getPeriodicite()==0){
-                    FindCreneauTacheSimple(tache);}
-                else
-                    FindCreneauTachePeriodique(simple);// la sortie c'est une liste de creneaux , du coup j'ai pas encor programmer ces taches j'ai juste trouvé ou les mettre(creneaux)
-
-            }
-            else {
-                TacheDecomposee decomposable = (TacheDecomposee) tache;
-                decomposable.DecomposerTache(user.getCalendar(LocalDate.now().getYear()).getJournee(LocalDate.now()),this);
-            }
+        FXMLLoader fxmlLoader=new FXMLLoader(getClass().getResource("TacheValidation.fxml"));
+        fxmlLoader.setControllerFactory(obj -> new TacheValidation(TmpList));
+        Parent root1 = null;
+        try {
+            root1 = fxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        for (Taches tache:lowPriorityTasks) {
-            if(tache instanceof TacheSimple){
-                TacheSimple simple = (TacheSimple) tache;
-                if (simple.getPeriodicite()==0){
-                    FindCreneauTacheSimple(tache);}
-                else
-                    FindCreneauTachePeriodique(simple);// la sortie c'est une liste de creneaux , du coup j'ai pas encor programmer ces taches j'ai juste trouvé ou les mettre(creneaux)
-
-            }
-            else {
-                TacheDecomposee decomposable = (TacheDecomposee) tache;
-                decomposable.DecomposerTache(user.getCalendar(LocalDate.now().getYear()).getJournee(LocalDate.now()),this);
-            }
-        }
-        if (user.getUnsheduledTaches()!= null){
-            //load le fxml des taches unshecheduled
-        }
-
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root1));
+        stage.show();
     }
     private void openPopup(String s) {
         // Create a new stage for the pop-up window
@@ -280,5 +309,31 @@ public class Planning implements Serializable {
         popupStage.setScene(popupScene);
         popupStage.showAndWait();
     }
+    public void replanification() {
+        List<Taches> tachesNonPlanifiees = new ArrayList<>();
 
+        for (Taches tache : this.tacheList) {
+            if (!tache.getCreneau().getBloque()) {
+                Journee jour = UserManager.getUser().getCalendar(tache.getCreneau().getDate().getYear()).getJournee(tache.getCreneau().getDate());
+                tachesNonPlanifiees.add(tache);
+                jour.suppCreneauPris(tache.getCreneau());
+                jour.addCreneauLibre(tache.getCreneau());
+                jour.supptache(tache);
+            }
+        }
+
+        // Supprimer les tâches de la liste principale après la boucle
+        this.tacheList.removeAll(tachesNonPlanifiees);
+        for (Taches t:tachesNonPlanifiees) {
+            System.out.println(t.getName());
+            UserManager.getUser().SuppTache(t);
+        }
+        Planification(tachesNonPlanifiees,this.dateDebut);
+    }
+    public Map<Badge, Integer> getBadges() {
+        return badges;
+    }
+    public void setBadges(Map<Badge, Integer> badges) {
+        this.badges = badges;
+    }
 }

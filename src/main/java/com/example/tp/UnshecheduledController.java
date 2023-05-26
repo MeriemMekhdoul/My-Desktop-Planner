@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class UnshecheduledController implements Initializable {
@@ -24,6 +25,14 @@ public class UnshecheduledController implements Initializable {
     @FXML
     private VBox tacheContainer;
     private User user;
+    @FXML
+    private Button annuler;
+
+    @FXML
+    private Button close;
+
+    @FXML
+    private Button replanifier;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         user=UserManager.getUser();
@@ -31,6 +40,7 @@ public class UnshecheduledController implements Initializable {
         ImageView imageView = new ImageView(image);
 
         for(Taches tache: user.getUnsheduledTaches()){
+            System.out.println("controller unshecheduled");
             Button tacheButton = new Button();
             tacheButton.setText(tache.getName());
             Button suppTache= new Button();
@@ -39,7 +49,6 @@ public class UnshecheduledController implements Initializable {
             tacheContainer.getChildren().add(hBoxcontainer);
             suppTache.setOnAction(event -> {
                 tacheContainer.getChildren().remove(hBoxcontainer);
-                // nrmlm je remove m la liste des unshechedeled ?
 
             });
             tacheButton.setOnAction(event -> {
@@ -60,7 +69,15 @@ public class UnshecheduledController implements Initializable {
 
 
         }
-    }
+        close.setOnAction(event -> {
+            Stage stage = (Stage) close.getScene().getWindow();
+            stage.close();
+        });
+        annuler.setOnAction(event ->{
+            Stage stage = (Stage) annuler.getScene().getWindow();
+            stage.close();
+        });
 
+    }
 
 }

@@ -4,12 +4,9 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.Map;
+import java.util.*;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 public class User implements Serializable {
    private List<Taches> tacheList ;
@@ -21,11 +18,8 @@ public class User implements Serializable {
    private List<Calendrier> calendriers;
    private Map<Badge,Integer> badges;
    private Duration MinCreneau = Duration.ofMinutes(30);
-
- //  private Historique histo ;
-   static private int minTaskDaily ;
+   static private int minTaskDaily=2 ;
    private Encouragement encouragement;
-
    private List<Planning> planningList;
 
    public User() {
@@ -35,6 +29,8 @@ public class User implements Serializable {
        this.categorie = new ArrayList<>();
        this.calendriers = new ArrayList<>();
        this.encouragement = new Encouragement();
+       this.badges=new HashMap<>();
+       this.listeProjet=new ArrayList<>();
    }
     public User(String username, String Password) {
         this.Pseudo = username;
@@ -102,7 +98,7 @@ public class User implements Serializable {
        }
        return  null;
    }
-        public Planning PlanningActuelleJour(LocalDate jour ){
+    public Planning PlanningActuelleJour(LocalDate jour ){
 
             for (Planning plan : planningList){
                 if ((jour.isAfter(plan.getDateDebut())|| jour.equals(plan.getDateDebut())) && (jour.isBefore(plan.getDateFin()) || jour.equals(plan.getDateFin()))){
@@ -114,7 +110,10 @@ public class User implements Serializable {
     public void setCalendar(Calendrier calendar) {
     }
     public  void addTache(Taches newTache){
-       tacheList.add(newTache);
+       if(tacheList.contains(newTache))
+           System.out.println("tache deja existante");
+       else
+           tacheList.add(newTache);
     }
 
     public List<Taches> getUnsheduledTaches() {
@@ -130,7 +129,6 @@ public class User implements Serializable {
     }
     public void SuppTache (Taches suppTache){
        tacheList.remove(suppTache);
-        // Creneau creneau= suppTache.getCreneau();
     }
     public void SuppProjet(Projet suppProjet){
         listeProjet.remove(suppProjet);

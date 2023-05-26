@@ -63,7 +63,7 @@
                      <font>
                         <Font size="14.0" />
                      </font></Label>
-                  <ComboBox fx:id="etat" onAction="#UpdateEncouragement" prefHeight="25.0" prefWidth="286.0" styleClass="tous" HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="etat"  prefHeight="25.0" prefWidth="286.0" styleClass="tous" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
             <Label text="Type de tache:">

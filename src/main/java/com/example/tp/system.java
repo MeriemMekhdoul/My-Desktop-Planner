@@ -10,27 +10,22 @@ import java.util.Set;
 public class system implements Serializable{
 
     private Set<User> users;
-
+    private  int i=0;
     public Set<User> getUsers() {
         return users;
     }
-
     public system() {
         users = new HashSet<>();
     }
-
     public void addUser(User user) {
         users.add(user);
     }
-    private  int i=0;
 
     public boolean authenticate(String username, String password) {
 
         for (User user : users) {
             System.out.println(user.getPassward());
             if (user.getPseudo().equals(username) ) {
-                System.out.println(user.getPseudo());
-                System.out.println("******"+BCrypt.checkpw(password, user.getPassward()));
                 if (BCrypt.checkpw(password, user.getPassward())) {
                     return true;
                 }
@@ -56,11 +51,9 @@ public class system implements Serializable{
         filein.close();
         in.close();
     }
-
     public int getI() {
         return i;
     }
-
     public void setI(int i) {
         this.i = i;
     }

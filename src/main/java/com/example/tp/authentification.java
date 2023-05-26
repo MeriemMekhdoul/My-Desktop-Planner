@@ -33,6 +33,13 @@ public class authentification implements Initializable {
     private system system1;
     @FXML
     private Label statusLabel;
+    @FXML
+    private Label label;
+    @FXML
+    private Button inscriptionButton;
+    private  boolean premierUtilisation;
+    private double xOffset = 0;
+    private double yOffset = 0;
 
 
     public void setSystem(com.example.tp.system system) {
@@ -40,10 +47,6 @@ public class authentification implements Initializable {
     }
     public authentification(system st){
         this.system1=st;
-    }
-    public String hashPassword(String password) {
-        String salt = BCrypt.gensalt();
-        return BCrypt.hashpw(password, salt);
     }
 
     @FXML
@@ -77,7 +80,8 @@ public class authentification implements Initializable {
         }
         boolean authenticated = system1.authenticate(username, password);
         if (authenticated) {
-            int numUser= system1.getI();
+            int numUser= system1.getUsers().size()-1;
+            System.out.println(numUser);
             String num= Integer.toString(numUser);
             FileMyDestcktopPlanner DP= new FileMyDestcktopPlanner();
             statusLabel.setText("Authentication successful");
@@ -106,15 +110,13 @@ public class authentification implements Initializable {
             });
             // Close the stage
             stage.close();
-            //Screen screen = Screen.getPrimary();
             stage.setScene(new Scene(root));
-           // stage.setFullScreen(true);
             stage.show();
             if(premierUtilisation){
                 Stage stage1=new Stage();
                 stage1.initStyle(StageStyle.UNDECORATED);
 
-                System.out.println("*************************************Premier utilisation");
+                System.out.println("************************************* Premiere utilisation");
                 FXMLLoader fxmlLoader1=new FXMLLoader(getClass().getResource("FirstUtilisation.fxml"));
                 Parent root1 = fxmlLoader1.load();
                 Scene scene = new Scene(root1);
@@ -129,11 +131,6 @@ public class authentification implements Initializable {
             statusLabel.setText("Mot de passe ou nom utilisateur incorrect");}
         }
     }
-    @FXML
-    private Label label;
-    @FXML
-    private Button inscriptionButton;
-    private  boolean premierUtilisation;
 
     @FXML
     public void handleRegisterButton() throws IOException {
@@ -141,8 +138,6 @@ public class authentification implements Initializable {
         inscriptionButton.setVisible(false);
         SeConnecter.setText("s'inscrire");
         premierUtilisation=true;
-        // Validate form inputs (e.g., check for empty fields, password complexity)
-
     }
 
     @Override
@@ -150,8 +145,6 @@ public class authentification implements Initializable {
        // system1= new system();
     }
 
-    private double xOffset = 0;
-    private double yOffset = 0;
     private void onMousePressed(MouseEvent event) {
         xOffset = event.getSceneX();
         yOffset = event.getSceneY();

@@ -50,6 +50,12 @@ public class CreerCreneauController implements Initializable {
 
 
 
+    public Creneau getNvCreneau() {
+        return nvCreneau;
+    }
+    public void setNvCreneau(Creneau nvCreneau) {  //inutile
+        this.nvCreneau = nvCreneau;
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         user = UserManager.getUser();
@@ -72,8 +78,6 @@ public class CreerCreneauController implements Initializable {
                 periodicite.setStyle(""); // Rétablit le style initial
             }
         });
-
-
     }
 
     @FXML
@@ -86,34 +90,8 @@ public class CreerCreneauController implements Initializable {
         Stage stage = (Stage) terminer.getScene().getWindow();
         stage.close();
     }
-    public void setCreneauPeriodique(Creneau creneau, Periode periode, int periodicite){
-        LocalDate debut = periode.getDateDebut();
-        LocalDate fin = periode.getDatefin();
-
-        Calendrier calendrier;
-        LocalDate date = debut;
-        while (!date.isAfter(fin)) {
-            Creneau creneau_ = new Creneau(creneau.getHeureDebut(), creneau.getHeureFin());
-            int year = date.getYear();
-            calendrier = /*UserManager.getUser()*/ user.getCalendar(year);
-
-            if (calendrier != null) {  //le calendrier existe
-                calendrier.getJournee(date).addCreneauLibre(creneau_);
-            } else {   //on a dépassé l'année courante, on crée un nouveau calendrier pour la nouvelle année
-                calendrier = new Calendrier(year);
-                /*UserManager.getUser()*/ user.newCalender(calendrier);
-                calendrier.getJournee(date).addCreneauLibre(creneau_);
-            }
-            creneau_.setDate(date);
-            date = date.plusDays(periodicite);
-        }
-    }
     @FXML
     private void handleAddCreneauButton() {
-        System.out.println("im in isDureeValide ? ......... user.getMinCreneau()"+user.getMinCreneau());
-        System.out.println("im in isDureeValide ? ......... user.getMinTaskDaily()"+user.getMinTaskDaily());
-        System.out.println("im in isDureeValide ? ......... user.getpseudo"+user.getPseudo());
-        System.out.println("im in isDureeValide ? ......... user.getpassword"+user.getPassward());
         if (!isCreneauVide()) {
             afficherErreurCreneauVide();
             return;
@@ -124,9 +102,10 @@ public class CreerCreneauController implements Initializable {
             return;
         }
         enleverErreur();
-        /*if (!isDureeValide()) {
+        if (!isDureeValide()) {
+            afficherErreurDuree();
             return;
-        }*/
+        }
         // La condition est vérifiée, enlever le message d'erreur s'il est présent
         enleverErreur();
 
@@ -141,6 +120,54 @@ public class CreerCreneauController implements Initializable {
         } else if (periode.isSelected()) {
             traiterPeriode();
         }
+    }
+    @FXML
+    private void handleCancelButton(){
+        this.nvCreneau = null;
+        Réinitialiser();
+        enleverErreur();
+        Stage stage = (Stage) terminer.getScene().getWindow();
+        stage.close();
+        //afficher tous les calendriers du user
+        if (user.getCalendriers()!=null){
+            for (Calendrier cal: user.getCalendriers()) {
+                System.out.println("cal 1 year : "+cal.getAnnee());
+                cal.afficherCalendrier();
+            }
+        }else
+            System.out.println("liste nulle, aucun calendrier existant");
+    }
+    public void setCreneauPeriodique(Creneau creneau, Periode periode, int periodicite){
+        LocalDate debut = periode.getDateDebut();
+        LocalDate fin = periode.getDatefin();
+
+        Calendrier calendrier;
+        LocalDate date = debut;
+        while (!date.isAfter(fin)) {
+            Creneau creneau_ = new Creneau(creneau.getHeureDebut(), creneau.getHeureFin());
+            int year = date.getYear();
+            calendrier = user.getCalendar(year);
+
+            if (calendrier != null) {  //le calendrier existe
+                calendrier.getJournee(date).addCreneauLibre(creneau_);
+            } else {   //on a dépassé l'année courante, on crée un nouveau calendrier pour la nouvelle année
+                calendrier = new Calendrier(year);
+                user.newCalender(calendrier);
+                calendrier.getJournee(date).addCreneauLibre(creneau_);
+            }
+            creneau_.setDate(date);
+            date = date.plusDays(periodicite);
+        }
+    }
+    private Creneau creerCreneau() {
+        Creneau creneau = new Creneau();
+        String heure = HD.getText();
+        LocalTime time = LocalTime.parse(heure);
+        creneau.setHeureDebut(time);
+        heure = HF.getText();
+        time = LocalTime.parse(heure);
+        creneau.setHeureFin(time);
+        return creneau;
     }
 
     private boolean isHeureValide() {
@@ -164,7 +191,6 @@ public class CreerCreneauController implements Initializable {
         LocalTime timeD = LocalTime.parse(HD.getText());
         LocalTime timeF = LocalTime.parse(HF.getText());
         Duration duree = Duration.between(timeD, timeF);
-        System.out.println("im in isDureeValide ......... user.getMinCreneau()"+user.getMinCreneau());
         return duree.compareTo(user.getMinCreneau()) >= 0;
     }
 
@@ -203,23 +229,12 @@ public class CreerCreneauController implements Initializable {
         }
     }
 
-    private Creneau creerCreneau() {
-        Creneau creneau = new Creneau();
-        String heure = HD.getText();
-        LocalTime time = LocalTime.parse(heure);
-        creneau.setHeureDebut(time);
-        heure = HF.getText();
-        time = LocalTime.parse(heure);
-        creneau.setHeureFin(time);
-        return creneau;
-    }
-
     private void ajouterCreneauLibreAujourdhui() {
         Calendar calendar = Calendar.getInstance();
         Date currentDate = calendar.getTime();
         LocalDate date = currentDate.toInstant().atZone(calendar.getTimeZone().toZoneId()).toLocalDate();
         nvCreneau.setDate(date);
-        /*UserManager.getUser()*/user.getCalendar(Year.now().getValue()).getJournee(date).addCreneauLibre(nvCreneau);
+        user.getCalendar(Year.now().getValue()).getJournee(date).addCreneauLibre(nvCreneau);
     }
 
     private void traiterPeriode() {
@@ -231,14 +246,6 @@ public class CreerCreneauController implements Initializable {
         Date currentDate = calendar.getTime();
         LocalDate today = currentDate.toInstant().atZone(calendar.getTimeZone().toZoneId()).toLocalDate();
 
-        if ((debut != null && debut.isBefore(today)) || (fin != null && fin.isBefore(today))) {
-            afficherErreurPeriode();
-            return;
-        }
-
-        // La condition n'est pas vérifiée, enlever le message d'erreur s'il est déjà présent
-        enleverErreurPeriode();
-
         // Continuer l'exécution
         int periodicite_ = Integer.parseInt(periodicite.getText());
         if (periodicite_ != 0) {
@@ -246,20 +253,23 @@ public class CreerCreneauController implements Initializable {
                 Periode periode = new Periode(debut, fin);
                 setCreneauPeriodique(nvCreneau, periode, periodicite_);
             } else {
-                Periode periode_;
+                Periode periode;
                 if (debut != null) {
-                    Year year_ = Year.of(debut.getYear());
-                    LocalDate endOfYear_ = year_.atMonth(12).atEndOfMonth();
-                    periode_ = new Periode(debut, endOfYear_);
-                    setCreneauPeriodique(nvCreneau, periode_, periodicite_);
+                    periode = new Periode(debut, user.PlanningActuelleJour(LocalDate.now()).getDateFin());
+                    setCreneauPeriodique(nvCreneau, periode, periodicite_);
                 } else if (fin != null) {
-                    periode_ = new Periode(today, fin);
-                    setCreneauPeriodique(nvCreneau, periode_, periodicite_);
+                    periode = new Periode(today, fin);
+                    setCreneauPeriodique(nvCreneau, periode, periodicite_);
                 } else {
-                    Year year = Year.of(today.getYear());
-                    LocalDate endOfYear = year.atMonth(12).atEndOfMonth();
-                    periode_ = new Periode(today, endOfYear);
-                    setCreneauPeriodique(nvCreneau, periode_, periodicite_);
+                    if (user.PlanningActuelleJour(LocalDate.now())!=null){
+                    periode = new Periode(today, user.PlanningActuelleJour(LocalDate.now()).getDateFin());
+                    setCreneauPeriodique(nvCreneau, periode, periodicite_);
+                    }else{
+                        Year year = Year.of(today.getYear());
+                        LocalDate endOfYear = year.atMonth(12).atEndOfMonth();
+                        periode = new Periode(today, endOfYear);
+                        setCreneauPeriodique(nvCreneau, periode, periodicite_);
+                    }
                 }
             }
             Réinitialiser();
@@ -284,22 +294,6 @@ public class CreerCreneauController implements Initializable {
         return structure.getChildren().contains(erreurdateanterieure) || structure.getChildren().contains(erreurCreneauVide) || structure.getChildren().contains(erreurduree) || structure.getChildren().contains(erreurHeure);
     }
 
-    @FXML
-    private void handleCancelButton(){
-        this.nvCreneau = null;
-        Réinitialiser();
-        enleverErreur();
-        Stage stage = (Stage) terminer.getScene().getWindow();
-        stage.close();
-        //afficher tous les calendriers du user
-        if (user.getCalendriers()!=null){
-            for (Calendrier cal: user.getCalendriers()) {
-                System.out.println("cal 1 year : "+cal.getAnnee());
-                cal.afficherCalendrier();
-            }
-        }else
-            System.out.println("liste nulle, aucun calendrier existant");
-    }
     public void Réinitialiser(){
         //réinitialiser les champs
         HD.setText(":");
@@ -308,11 +302,5 @@ public class CreerCreneauController implements Initializable {
         periode.setSelected(false);
         periodicite.setText("1");
         periodicite.setStyle("");
-    }
-    public Creneau getNvCreneau() {
-        return nvCreneau;
-    }
-    public void setNvCreneau(Creneau nvCreneau) {  //inutile
-        this.nvCreneau = nvCreneau;
     }
 }

@@ -12,25 +12,14 @@ public class Creneau implements Serializable,Decomposable {
     private LocalTime HeureDebut;
     private LocalTime HeureFin;
     private Boolean bloque = false;
-    private static Duration dureeMIN;
 
     public Creneau() {
     }
-
-    public Creneau(LocalTime HD, LocalTime HF/*,LocalDate date*/) {
-        //this.date = date;
+    public Creneau(LocalTime HD, LocalTime HF) {
         this.HeureDebut = HD;
         this.HeureFin = HF;
-        //this.bloque = false;
     }
 
-    public static Duration getDureeMIN() {
-        return dureeMIN;
-    }
-
-    public static void setDureeMIN(Duration dureeMIN) {
-        Creneau.dureeMIN = dureeMIN;
-    }
 
     public LocalTime getHeureDebut() {
         return HeureDebut;
